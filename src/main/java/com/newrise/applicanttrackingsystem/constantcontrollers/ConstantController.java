@@ -2,15 +2,10 @@ package com.newrise.applicanttrackingsystem.constantcontrollers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 @CrossOrigin("*")
 public class ConstantController 
 {
-	@GetMapping("/")
-	public static String getLoginPage()
-	{
-		return "index";
-	}
+	
 }

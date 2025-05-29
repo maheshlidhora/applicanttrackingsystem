@@ -2,6 +2,8 @@ package com.newrise.applicanttrackingsystem.entities;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,7 +31,7 @@ public class Users
 
 	@Column(name = "password", nullable = false, length = 150)
 	private String password;
-
+	
 	@ManyToMany (fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
 	@JoinTable (name = "user_roles",
 	joinColumns = {

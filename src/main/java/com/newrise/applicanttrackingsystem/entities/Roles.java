@@ -2,6 +2,10 @@ package com.newrise.applicanttrackingsystem.entities;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,6 +35,7 @@ public class Roles {
 	@Column(name = "roleName", unique = true)
 	private String roleName; // ADMIN, MANAGER, INTERVIEWER, CANDIDATE 
 
+	@JsonIgnore // To ignore infinite recursion (circular reference) in your JSON response.
 	@ManyToMany (mappedBy = "roles",fetch = FetchType.EAGER)
 	private Set<Users> users;
 
