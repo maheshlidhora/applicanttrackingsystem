@@ -1,11 +1,16 @@
 package com.newrise.applicanttrackingsystem.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-//import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -15,18 +20,18 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 @EnableWebSecurity
 public class SecurityConfig 
 {
+	
+	@Autowired
+	private UserDetailsService userDetailsService;
+	
 	private static final String[] PUBLIC_URLS = {
 			"/", 
-			"/index.html", 
-			"/user/logPage", "/user/doLogin", "/submitLogForm", 
-			"/user/regPage", "/user/doRegistration", "/submitRegForm",
-			"/failed"
+			"/user/", "/user/register"
 		};
 	
 	@SuppressWarnings({ "deprecation", "removal" })
 	private static final RequestMatcher[] CSRF_IGNORED = new RequestMatcher[] {
-//	    new AntPathRequestMatcher("/public/**"),
-//	    new AntPathRequestMatcher("/login"),
+//	    new AntPathRequestMatcher("/user/login"),
 	    new AntPathRequestMatcher("/user/**")
 	};
 
@@ -37,11 +42,16 @@ public class SecurityConfig
     		    .ignoringRequestMatchers(CSRF_IGNORED)
     		    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
     		);
-
     	http.authorizeHttpRequests((request) -> request.requestMatchers(PUBLIC_URLS).permitAll().anyRequest().authenticated());
-    	http.formLogin(Customizer.withDefaults());
     	http.httpBasic(Customizer.withDefaults());
+    	http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
     
+	@Bean
+    public AuthenticationProvider authenticationProvider() {
+    	DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(userDetailsService);
+    	authenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder(12));
+    	return authenticationProvider;
+    }
 }

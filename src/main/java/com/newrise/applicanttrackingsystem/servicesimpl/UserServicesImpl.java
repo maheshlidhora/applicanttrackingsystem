@@ -3,6 +3,8 @@ package com.newrise.applicanttrackingsystem.servicesimpl;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.newrise.applicanttrackingsystem.entities.Users;
@@ -15,11 +17,15 @@ public class UserServicesImpl implements UserServices
 	@Autowired
 	private UsersRepository usersRepository;
 	
+	
+	//	For Password Encryption
+	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
+	
 	@Override
 	public Optional <Users> findUserDetails(String email, String password) 
 	{
 		Optional<Users> users = usersRepository.findByEmail(email);
-		if (users.isPresent() && users.get().getPassword().equals(password)) 
+		if (users.isPresent() && bCryptPasswordEncoder.matches(password, users.get().getPassword())) 
 		{
 			return users;
 		}
@@ -31,6 +37,7 @@ public class UserServicesImpl implements UserServices
 	{
 		if (users != null) 
 		{
+			users.setPassword(bCryptPasswordEncoder.encode(users.getPassword()));
 			usersRepository.save(users);
 			return "User Registered Successfully!!";
 		} 

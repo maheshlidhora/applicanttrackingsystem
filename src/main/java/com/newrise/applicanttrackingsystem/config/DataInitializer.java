@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.newrise.applicanttrackingsystem.entities.Roles;
@@ -23,6 +24,8 @@ public class DataInitializer implements CommandLineRunner
 	private RolesRepository rolesRepository;
 	@Autowired
 	private UsersRepository usersRepository;
+	
+	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
 	
 	@Override
 	public void run(String... args) throws Exception 
@@ -46,7 +49,7 @@ public class DataInitializer implements CommandLineRunner
         if (usersRepository.findByEmail(adminEmail).isEmpty()) {
             Users adminUser = new Users();
             adminUser.setEmail(adminEmail);
-            adminUser.setPassword("admin@123");
+            adminUser.setPassword(bCryptPasswordEncoder.encode("admin@123"));
             adminUser.setRoles(Set.of(savedRoles.get("Admin"))); 
             usersRepository.save(adminUser);
             System.err.println("Default admin user created.");
