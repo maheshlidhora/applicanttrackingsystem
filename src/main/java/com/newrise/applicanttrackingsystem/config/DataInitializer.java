@@ -28,7 +28,7 @@ public class DataInitializer implements CommandLineRunner
 	public void run(String... args) throws Exception 
 	{
 		// Creation of Predefined Roles:
-        List<String> predefinedRoles = Arrays.asList("Admin", "Manager", "Interviewer", "Candidate");
+        List<String> predefinedRoles = Arrays.asList("Admin", "HR Manager", "Interviewer", "Candidate");
         Map<String, Roles> savedRoles = new HashMap<>();
         for (String roleName : predefinedRoles) {
             Roles role = rolesRepository.findByRoleName(roleName)

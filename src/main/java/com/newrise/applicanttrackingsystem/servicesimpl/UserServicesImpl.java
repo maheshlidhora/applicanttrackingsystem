@@ -25,5 +25,19 @@ public class UserServicesImpl implements UserServices
 		}
 		return Optional.empty();
 	}
+
+	@Override
+	public String registerUserDetails(Users users) 
+	{
+		if (users != null) 
+		{
+			usersRepository.save(users);
+			return "User Registered Successfully!!";
+		} 
+		else 
+		{
+			return "User Not Registered!!";
+		}
+	}
 	
 }

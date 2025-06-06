@@ -33,7 +33,7 @@ public class Roles {
 	private long roleId;
 
 	@Column(name = "roleName", unique = true)
-	private String roleName; // ADMIN, MANAGER, INTERVIEWER, CANDIDATE 
+	private String roleName; // "Admin", "HR Manager", "Interviewer", "Candidate"
 
 	@JsonIgnore // To ignore infinite recursion (circular reference) in your JSON response.
 	@ManyToMany (mappedBy = "roles",fetch = FetchType.EAGER)
