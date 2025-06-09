@@ -23,6 +23,8 @@ import com.newrise.applicanttrackingsystem.repository.RolesRepository;
 import com.newrise.applicanttrackingsystem.repository.UsersRepository;
 import com.newrise.applicanttrackingsystem.services.UserServices;
 
+import io.jsonwebtoken.JwtBuilder;
+
 
 @RestController
 @CrossOrigin("*")
@@ -44,10 +46,46 @@ public class UsersController
 	}
 	
 	@PostMapping("/login")
-	public Users getUserLogedin(@RequestBody Users users) 
-	{
-		return userServices.findUserDetails(users.getEmail(), users.getPassword())
-				.orElseThrow(() -> new RuntimeException("User not found"));
+    public ResponseEntity<Map<String, Object>> login(@RequestBody Users users) {
+        Map<String, Object> response = new HashMap<>();
+        if (users.getEmail() == null || users.getPassword() == null) {
+            response.put("success", false);
+            response.put("message", "Email and password are required.");
+            return ResponseEntity.badRequest().body(response);
+        }
+        try {
+            // Authenticate User and Generating Token
+            String token = userServices.varifyUser(users);
+            if (token == null) {
+                response.put("success", false);
+                response.put("message", "Invalid email or password.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            }
+            Users authenticatedUser = usersRepository.findByEmail(users.getEmail()).orElseThrow(
+                    () -> new RuntimeException("User not found after authentication.")
+            );
+            Set<String> roles = authenticatedUser.getRoles().stream()
+                    .map(r -> r.getRoleName())
+                    .collect(Collectors.toSet());
+            // Final Response
+            response.put("success", true);
+            response.put("token", token);
+            response.put("user", Map.of(
+                    "id", authenticatedUser.getUserId(),
+                    "email", authenticatedUser.getEmail(),
+                    "roles", roles
+            ));
+            return ResponseEntity.ok(response);
+        } catch (Exception ex) {
+            response.put("success", false);
+            response.put("message", "Login failed: " + ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+	
+	@GetMapping("/showAll")
+	public String printAllUsers() {
+		return "Here, all users will be show.";
 	}
 	
 	@PostMapping("/register")
