@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,6 +24,7 @@ import com.newrise.applicanttrackingsystem.filters.JwtFilter;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig 
 {
 	
@@ -39,8 +41,8 @@ public class SecurityConfig
 	
 	@SuppressWarnings({ "deprecation", "removal" })
 	private static final RequestMatcher[] CSRF_IGNORED = new RequestMatcher[] {
-//	    new AntPathRequestMatcher("/user/login"),
-	    new AntPathRequestMatcher("/user/**")
+	    new AntPathRequestMatcher("/user/register"),
+	    new AntPathRequestMatcher("/user/login")
 	};
 
     @Bean
