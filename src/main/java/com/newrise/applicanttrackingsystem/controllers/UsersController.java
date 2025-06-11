@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +23,7 @@ import com.newrise.applicanttrackingsystem.repository.RolesRepository;
 import com.newrise.applicanttrackingsystem.repository.UsersRepository;
 import com.newrise.applicanttrackingsystem.services.UserServices;
 
-import io.jsonwebtoken.JwtBuilder;
+import jakarta.validation.Valid;
 
 
 @RestController
@@ -47,7 +46,7 @@ public class UsersController
 	}
 	
 	@PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody Users users) {
+    public ResponseEntity<Map<String, Object>> login(@Valid @RequestBody Users users) {
         Map<String, Object> response = new HashMap<>();
         if (users.getEmail() == null || users.getPassword() == null) {
             response.put("success", false);
@@ -179,33 +178,4 @@ public class UsersController
         String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,15}$";
         return Pattern.matches(passwordRegex, password);
     }
-    
- // Role-based Dashboard Endpoint
-
-    @GetMapping("/dashboard/admin")
-    @PreAuthorize("hasRole('Admin')")
-    public String getAdminDashboard() {
-        return "Welcome to the Admin Dashboard!";
-    }
-
-    @GetMapping("/dashboard/hr")
-    @PreAuthorize("hasRole('HR Manager')")
-    public String getHRDashboard() {
-        return "Welcome to the HR Manager Dashboard!";
-    }
-
-    @GetMapping("/dashboard/interviewer")
-    @PreAuthorize("hasRole('Interviewer')")
-    public String getInterviewerDashboard() {
-        return "Welcome to the Interviewer Dashboard!";
-    }
-    
-    @GetMapping("/dashboard/candidate")
-    @PreAuthorize("hasRole('Candidate')")
-    public String getCandidateDashboard() {
-        return "Welcome to the Candidate Dashboard!";
-    }
-    
-    
-    
 }

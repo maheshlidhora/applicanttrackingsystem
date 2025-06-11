@@ -13,6 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.newrise.applicanttrackingsystem.servicesimpl.CustomUserDetailsService;
 import com.newrise.applicanttrackingsystem.servicesimpl.JWTService;
+import com.newrise.applicanttrackingsystem.utils.ColorPrinter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,40 +21,55 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class JwtFilter extends OncePerRequestFilter
+public class JwtFilter extends OncePerRequestFilter 
 {
-
-	@Autowired
-    private JWTService jwtService;
-
     @Autowired
-    ApplicationContext context;
+    private JWTService jwtService;
+    @Autowired
+    private ApplicationContext context;
     
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException 
-	{
-		String authHeader = request.getHeader("Authorization");
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException 
+    {
+        String authHeader = request.getHeader("Authorization");
         String token = null;
         String username = null;
-
+        // Extracting token from header
         if (authHeader != null && authHeader.startsWith("Bearer ")) 
         {
             token = authHeader.substring(7);
-            username = jwtService.extractUserName(token);
+            try 
+            {
+                username = jwtService.extractUserName(token);
+            } 
+            catch (Exception e) 
+            {
+                System.out.println("Failed to extract username from token: " + e.getMessage());
+            }
         }
-
+        // Validating and Set authentication
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) 
         {
-            UserDetails userDetails = context.getBean(CustomUserDetailsService.class).loadUserByUsername(username);
-            if (jwtService.validateToken(token, userDetails)) {
+            CustomUserDetailsService userDetailsService = context.getBean(CustomUserDetailsService.class);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            if (jwtService.validateToken(token, userDetails)) 
+            {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource()
-                        .buildDetails(request));
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                ColorPrinter.printGreen("Authenticated user: ");
+                ColorPrinter.printlnPurple(username);
+                ColorPrinter.printGreen("Authorities:");
+                userDetails.getAuthorities().forEach(authority -> ColorPrinter.printlnPurple(" - " + authority.getAuthority()));
+                
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+            } 
+            else 
+            {
+                System.out.println("Token validation failed for user: " + username);
             }
         }
         filterChain.doFilter(request, response);
-	}
-
+    }
 }
+

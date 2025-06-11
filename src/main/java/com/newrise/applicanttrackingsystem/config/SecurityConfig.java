@@ -42,7 +42,10 @@ public class SecurityConfig
 	@SuppressWarnings({ "deprecation", "removal" })
 	private static final RequestMatcher[] CSRF_IGNORED = new RequestMatcher[] {
 	    new AntPathRequestMatcher("/user/register"),
-	    new AntPathRequestMatcher("/user/login")
+	    new AntPathRequestMatcher("/user/login"),
+	    new AntPathRequestMatcher("/user/addRole"),
+	    new AntPathRequestMatcher("/user/deleteRole/{id}"),
+	    new AntPathRequestMatcher("/user/updateRole/{id}")
 	};
 
     @Bean
@@ -57,7 +60,8 @@ public class SecurityConfig
     			.permitAll()
     			.anyRequest()
     			.authenticated());
-    	http.httpBasic(Customizer.withDefaults());
+    	// REMOVE httpBasic — it conflicts with JWT filter
+        http.httpBasic(Customizer.withDefaults());
     	http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
     	http.addFilterBefore(jwtFilet, UsernamePasswordAuthenticationFilter.class);
         return http.build();

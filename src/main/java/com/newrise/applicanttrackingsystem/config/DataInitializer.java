@@ -16,6 +16,7 @@ import com.newrise.applicanttrackingsystem.entities.Roles;
 import com.newrise.applicanttrackingsystem.entities.Users;
 import com.newrise.applicanttrackingsystem.repository.RolesRepository;
 import com.newrise.applicanttrackingsystem.repository.UsersRepository;
+import com.newrise.applicanttrackingsystem.utils.ColorPrinter;
 
 @Component
 public class DataInitializer implements CommandLineRunner
@@ -52,9 +53,8 @@ public class DataInitializer implements CommandLineRunner
             adminUser.setPassword(bCryptPasswordEncoder.encode("admin@123"));
             adminUser.setRoles(Set.of(savedRoles.get("Admin"))); 
             usersRepository.save(adminUser);
-            System.err.println("Default admin user created.");
+            ColorPrinter.printlnGreen("Default Admin User Created..!!");
         }
-
-        System.err.println("Predefined roles and default user initialized.");
+        ColorPrinter.printlnGreen("Predefined roles are Initialized..!!");
 	}
 }
