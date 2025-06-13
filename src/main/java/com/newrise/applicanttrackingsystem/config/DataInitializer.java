@@ -52,6 +52,8 @@ public class DataInitializer implements CommandLineRunner
             adminUser.setEmail(adminEmail);
             adminUser.setPassword(bCryptPasswordEncoder.encode("admin@123"));
             adminUser.setRoles(Set.of(savedRoles.get("Admin"))); 
+            adminUser.setContact("8516030885");
+            adminUser.setVerified(true);
             usersRepository.save(adminUser);
             ColorPrinter.printlnGreen("Default Admin User Created..!!");
         }

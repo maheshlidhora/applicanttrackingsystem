@@ -36,8 +36,8 @@ public class SecurityConfig
 	
 	private static final String[] PUBLIC_URLS = {
 			"/", 
-			"/user/", "/user/register", "/user/login"
-		};
+			"/user/", "/user/register", "/user/login", "/user/generateOtp", "/user/verifyOtp"
+	};
 	
 	@SuppressWarnings({ "deprecation", "removal" })
 	private static final RequestMatcher[] CSRF_IGNORED = new RequestMatcher[] {
@@ -45,7 +45,9 @@ public class SecurityConfig
 	    new AntPathRequestMatcher("/user/login"),
 	    new AntPathRequestMatcher("/user/addRole"),
 	    new AntPathRequestMatcher("/user/deleteRole/{id}"),
-	    new AntPathRequestMatcher("/user/updateRole/{id}")
+	    new AntPathRequestMatcher("/user/updateRole/{id}"),
+	    new AntPathRequestMatcher("/user/generateOtp"),
+	    new AntPathRequestMatcher("/user/verifyOtp")
 	};
 
     @Bean

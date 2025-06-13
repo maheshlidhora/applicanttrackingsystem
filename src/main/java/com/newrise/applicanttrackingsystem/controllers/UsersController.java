@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,7 @@ import com.newrise.applicanttrackingsystem.entities.Roles;
 import com.newrise.applicanttrackingsystem.entities.Users;
 import com.newrise.applicanttrackingsystem.repository.RolesRepository;
 import com.newrise.applicanttrackingsystem.repository.UsersRepository;
+import com.newrise.applicanttrackingsystem.services.OtpService;
 import com.newrise.applicanttrackingsystem.services.UserServices;
 
 import jakarta.validation.Valid;
@@ -37,6 +39,8 @@ public class UsersController
 	private RolesRepository rolesRepository;
 	@Autowired
     private UsersRepository usersRepository;
+	@Autowired
+	private OtpService otpService;
 
 	
 	@GetMapping("/")
@@ -99,6 +103,23 @@ public class UsersController
             response.put("message", "Invalid email format. Please provide a valid email.");
             return ResponseEntity.badRequest().body(response);
         }
+        
+        // Validation of Contact Format
+        if (users.getContact() == null || !isValidContact(users.getContact())) 
+        {
+            response.put("success", false);
+            response.put("message", "Invalid contact format. Please provide a valid Contact.");
+            return ResponseEntity.badRequest().body(response);
+        }
+        
+        // Check the contact is already present in our Database or Not?
+        if (usersRepository.findByEmail(users.getContact()).isPresent()) 
+        {
+            response.put("success", false);
+            response.put("message", "This contact is already registered. Please choose another contact.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+        }
+        
         // Check the email is already present in our Database or Not?
         if (usersRepository.findByEmail(users.getEmail()).isPresent()) 
         {
@@ -177,5 +198,43 @@ public class UsersController
         // .{6,15}           Length between 6 and 15
         String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,15}$";
         return Pattern.matches(passwordRegex, password);
+    }
+    
+    public static boolean isValidContact(String contact) 
+    {
+        if (contact == null || !contact.matches("^[6-9]\\d{9}$")) 
+        {
+            return false;
+        }
+        return true;
+    }
+    
+    @PostMapping("/generateOtp")
+    public String generateOtpForUser(@RequestBody Users user) 
+    {
+		return otpService.generateOtp(user.getEmail())?"OTP is Generate":"User not found with given email or phone.";
+    }
+    
+    @PostMapping("/verifyOtp")
+    public String verifyOtpForUser(@RequestBody Users user) 
+    {
+    	Users claimingUser = user;
+    	if (claimingUser!=null  && claimingUser.getOtpCode()!=null) 
+    	{
+    		try {
+        		if (usersRepository.findByEmail(claimingUser.getEmail()).get().getEmail().equalsIgnoreCase(claimingUser.getEmail())) 
+        		{
+        			boolean status = otpService.verifyOtp(claimingUser.getEmail(), claimingUser.getOtpCode());
+        			if (status) 
+        			{
+    					return "User is verified by OTP";
+    				}
+        			return "OTP doesn't match. Please provide a valid OTP";
+    			} 
+			} catch (Exception e) {
+				return "User not found..!!";
+			}
+		}
+    	return "Please provide a valid Email or OTP that can't be null";
     }
 }

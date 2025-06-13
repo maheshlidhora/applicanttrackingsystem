@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.newrise.applicanttrackingsystem.entities.Users;
 import com.newrise.applicanttrackingsystem.repository.UsersRepository;
+import com.newrise.applicanttrackingsystem.services.OtpService;
 import com.newrise.applicanttrackingsystem.services.UserServices;
 
 import io.jsonwebtoken.JwtBuilder;
@@ -27,6 +28,9 @@ public class UserServicesImpl implements UserServices
 	
 	@Autowired
 	private JWTService jwtService;
+	
+//	@Autowired
+//	private OtpService otpService;
 	
 	//	For Password Encryption
 	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
@@ -48,7 +52,14 @@ public class UserServicesImpl implements UserServices
 		if (users != null) 
 		{
 			users.setPassword(bCryptPasswordEncoder.encode(users.getPassword()));
-			usersRepository.save(users);
+			try 
+			{
+				usersRepository.save(users);
+			} 
+			catch (Exception e) 
+			{
+				return "This contact is already registered. Please choose another contact.";
+			}
 			return "User Registered Successfully!!";
 		} 
 		else 
