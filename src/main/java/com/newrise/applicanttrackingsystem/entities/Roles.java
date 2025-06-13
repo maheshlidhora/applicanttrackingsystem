@@ -33,7 +33,7 @@ public class Roles {
 	private long roleId;
 
 	@Column(name = "roleName", unique = true)
-	private String roleName; // "Admin", "HR Manager", "Interviewer", "Candidate"
+	private String roleName; // ADMIN, MANAGER, INTERVIEWER, CANDIDATE 
 
 	@JsonIgnore // To ignore infinite recursion (circular reference) in your JSON response.
 	@ManyToMany (mappedBy = "roles",fetch = FetchType.EAGER)
@@ -63,14 +63,14 @@ public class Roles {
 		this.users = users;
 	}
 
-	public Roles(long roleId, String roleName, Set<Users> users) {
-		super();
-		this.roleId = roleId;
-		this.roleName = roleName;
-		this.users = users;
-	}
-
-	public Roles() {
-		super();
-	}
+//	public Roles(long roleId, String roleName, Set<Users> users) {
+//		super();
+//		this.roleId = roleId;
+//		this.roleName = roleName;
+//		this.users = users;
+//	}
+//
+//	public Roles() {
+//		super();
+//	}
 }

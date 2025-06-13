@@ -2,6 +2,8 @@ package com.newrise.applicanttrackingsystem.entities;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,9 +15,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 
 @Entity
@@ -28,13 +27,9 @@ public class Users
 	private long userId;
 
 	@Column(name = "email", nullable = false, unique = true, length = 150)
-	@Email(message = "Email should be valid")
-    @NotBlank(message = "Email is required")
 	private String email;
 
 	@Column(name = "password", nullable = false, length = 150)
-	@NotBlank(message = "Password is required")
-    @Size(min = 6, message = "Password should be at least 6 characters to maximum 15 characters")
 	private String password;
 	
 	@ManyToMany (fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH})

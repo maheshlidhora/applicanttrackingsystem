@@ -9,14 +9,12 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.newrise.applicanttrackingsystem.entities.Roles;
 import com.newrise.applicanttrackingsystem.entities.Users;
 import com.newrise.applicanttrackingsystem.repository.RolesRepository;
 import com.newrise.applicanttrackingsystem.repository.UsersRepository;
-import com.newrise.applicanttrackingsystem.utils.ColorPrinter;
 
 @Component
 public class DataInitializer implements CommandLineRunner
@@ -26,13 +24,11 @@ public class DataInitializer implements CommandLineRunner
 	@Autowired
 	private UsersRepository usersRepository;
 	
-	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
-	
 	@Override
 	public void run(String... args) throws Exception 
 	{
 		// Creation of Predefined Roles:
-        List<String> predefinedRoles = Arrays.asList("Admin", "HR Manager", "Interviewer", "Candidate");
+        List<String> predefinedRoles = Arrays.asList("Admin", "Manager", "Interviewer", "Candidate");
         Map<String, Roles> savedRoles = new HashMap<>();
         for (String roleName : predefinedRoles) {
             Roles role = rolesRepository.findByRoleName(roleName)
@@ -50,11 +46,12 @@ public class DataInitializer implements CommandLineRunner
         if (usersRepository.findByEmail(adminEmail).isEmpty()) {
             Users adminUser = new Users();
             adminUser.setEmail(adminEmail);
-            adminUser.setPassword(bCryptPasswordEncoder.encode("admin@123"));
+            adminUser.setPassword("admin@123");
             adminUser.setRoles(Set.of(savedRoles.get("Admin"))); 
             usersRepository.save(adminUser);
-            ColorPrinter.printlnGreen("Default Admin User Created..!!");
+            System.err.println("Default admin user created.");
         }
-        ColorPrinter.printlnGreen("Predefined roles are Initialized..!!");
+
+        System.err.println("Predefined roles and default user initialized.");
 	}
 }
