@@ -22,8 +22,8 @@ import com.newrise.applicanttrackingsystem.entities.Roles;
 import com.newrise.applicanttrackingsystem.entities.Users;
 import com.newrise.applicanttrackingsystem.repository.RolesRepository;
 import com.newrise.applicanttrackingsystem.repository.UsersRepository;
-import com.newrise.applicanttrackingsystem.services.OtpService;
-import com.newrise.applicanttrackingsystem.services.UserServices;
+import com.newrise.applicanttrackingsystem.services.IOtpService;
+import com.newrise.applicanttrackingsystem.services.IUserServices;
 
 import jakarta.validation.Valid;
 
@@ -34,13 +34,13 @@ import jakarta.validation.Valid;
 public class UsersController 
 {
 	@Autowired
-	private UserServices userServices;
+	private IUserServices iUserServices;
 	@Autowired
 	private RolesRepository rolesRepository;
 	@Autowired
     private UsersRepository usersRepository;
 	@Autowired
-	private OtpService otpService;
+	private IOtpService iOtpService;
 
 	
 	@GetMapping("/")
@@ -59,7 +59,7 @@ public class UsersController
         }
         try {
             // Authenticate User and Generating Token
-            String token = userServices.varifyUser(users);
+            String token = iUserServices.varifyUser(users);
             if (token == null) {
                 response.put("success", false);
                 response.put("message", "Invalid email or password.");
@@ -177,7 +177,7 @@ public class UsersController
         users.setRoles(resolvedRoles);
 
         // Finally we are registering the user.
-        String result = userServices.registerUserDetails(users);
+        String result = iUserServices.registerUserDetails(users);
         response.put("success", true);
         response.put("message", result);
         response.put("userEmail", users.getEmail());
@@ -212,7 +212,7 @@ public class UsersController
     @PostMapping("/generateOtp")
     public String generateOtpForUser(@RequestBody Users user) 
     {
-		return otpService.generateOtp(user.getEmail())?"OTP is Generate":"User not found with given email or phone.";
+		return iOtpService.generateOtp(user.getEmail())?"OTP is Generate":"User not found with given email or phone.";
     }
     
     @PostMapping("/verifyOtp")
@@ -224,7 +224,7 @@ public class UsersController
     		try {
         		if (usersRepository.findByEmail(claimingUser.getEmail()).get().getEmail().equalsIgnoreCase(claimingUser.getEmail())) 
         		{
-        			boolean status = otpService.verifyOtp(claimingUser.getEmail(), claimingUser.getOtpCode());
+        			boolean status = iOtpService.verifyOtp(claimingUser.getEmail(), claimingUser.getOtpCode());
         			if (status) 
         			{
     					return "User is verified by OTP";

@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.newrise.applicanttrackingsystem.entities.Roles;
 import com.newrise.applicanttrackingsystem.repository.RolesRepository;
-import com.newrise.applicanttrackingsystem.services.RoleServices;
+import com.newrise.applicanttrackingsystem.services.IRoleServices;
 
 @Service
-public class RoleServicesImpl implements RoleServices
+public class RoleServicesImpl implements IRoleServices
 {
 	@Autowired
 	private RolesRepository rolesRepository;

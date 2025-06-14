@@ -12,13 +12,13 @@ import org.springframework.stereotype.Service;
 
 import com.newrise.applicanttrackingsystem.entities.Users;
 import com.newrise.applicanttrackingsystem.repository.UsersRepository;
-import com.newrise.applicanttrackingsystem.services.OtpService;
-import com.newrise.applicanttrackingsystem.services.UserServices;
+import com.newrise.applicanttrackingsystem.services.IOtpService;
+import com.newrise.applicanttrackingsystem.services.IUserServices;
 
 import io.jsonwebtoken.JwtBuilder;
 
 @Service
-public class UserServicesImpl implements UserServices 
+public class UserServicesImpl implements IUserServices 
 {
 	@Autowired
 	private UsersRepository usersRepository;

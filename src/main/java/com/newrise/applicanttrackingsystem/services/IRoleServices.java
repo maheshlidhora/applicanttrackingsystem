@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import com.newrise.applicanttrackingsystem.entities.Roles;
 
-public interface RoleServices 
+public interface IRoleServices 
 {
 	public String addRole(Roles roles);
 	public String updateRole(long id, Roles updatedRole);

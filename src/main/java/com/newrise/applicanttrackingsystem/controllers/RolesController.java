@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.newrise.applicanttrackingsystem.entities.Roles;
-import com.newrise.applicanttrackingsystem.services.RoleServices;
+import com.newrise.applicanttrackingsystem.services.IRoleServices;
 
 @RestController
 @CrossOrigin("*")
@@ -27,7 +27,7 @@ import com.newrise.applicanttrackingsystem.services.RoleServices;
 public class RolesController 
 {
 	@Autowired
-	private RoleServices roleServices;
+	private IRoleServices iRoleServices;
 	
 	@PostMapping("/addRole")
 	@PreAuthorize("hasRole('Admin')")
@@ -35,12 +35,12 @@ public class RolesController
 	{
 	    Map<String, Object> response = new HashMap<>();
 	    try {
-	        if (roleServices.findRoleDetails(roles.getRoleName()).isPresent()) {
+	        if (iRoleServices.findRoleDetails(roles.getRoleName()).isPresent()) {
 	            response.put("success", false);
 	            response.put("message", "Role '" + roles.getRoleName() + "' already exists. Please choose a different name.");
 	            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
 	        }
-	        String result = roleServices.addRole(roles);
+	        String result = iRoleServices.addRole(roles);
 	        response.put("success", true);
 	        response.put("message", result);
 	        return ResponseEntity.ok(response);
@@ -54,13 +54,13 @@ public class RolesController
 	@GetMapping("/getAllRoles")
 	@PreAuthorize("hasRole('Admin')")
 	public List<Roles> getAllRoleDetails(){
-		return roleServices.fineAllRoles();
+		return iRoleServices.fineAllRoles();
 	}
 	
 	@DeleteMapping("/deleteRole/{id}")
 	@PreAuthorize("hasRole('Admin')")
     public ResponseEntity<String> deleteRoleDetails(@PathVariable long id) {
-        String response = roleServices.deleteRole(id);
+        String response = iRoleServices.deleteRole(id);
         if ("Role is Deleted!!".equalsIgnoreCase(response)) {
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -80,6 +80,6 @@ public class RolesController
 	@PreAuthorize("hasRole('Admin')")
 	public String updateRoleDetails(@PathVariable long id, @RequestBody Roles roles)
 	{
-		return roleServices.updateRole(id, roles);
+		return iRoleServices.updateRole(id, roles);
 	}
 }

@@ -9,15 +9,19 @@ import org.springframework.stereotype.Service;
 
 import com.newrise.applicanttrackingsystem.entities.Users;
 import com.newrise.applicanttrackingsystem.repository.UsersRepository;
-import com.newrise.applicanttrackingsystem.services.OtpService;
+import com.newrise.applicanttrackingsystem.services.IEmailService;
+import com.newrise.applicanttrackingsystem.services.IOtpService;
 import com.newrise.applicanttrackingsystem.utils.ColorPrinter;
 
 @Service
-public class OtpServiceImpl implements OtpService
+public class OtpServiceImpl implements IOtpService
 {
 
     @Autowired
     private UsersRepository usersRepository;
+    
+    @Autowired
+    private IEmailService emailService;
 
     private static final int OTP_EXPIRY_MINUTES = 15;	
 	
@@ -34,8 +38,18 @@ public class OtpServiceImpl implements OtpService
             usersRepository.save(user);
             // ######################## Integration of SMS/Email Service ########################
             
-            
-            
+            emailService.sendEmail(user.getEmail(), 
+            		"Your OTP for Verification by NST-ATS",
+            		
+            		"Dear "+user.getEmail()+",\n"
+            		+ "\n"
+            		+ "Your One-Time Password (OTP) for verification is: "+otp+"\n"
+            		+ "This OTP is valid for the next "+OTP_EXPIRY_MINUTES+" minutes. Please do not share this code with anyone.\n"
+            		+ "\n"
+            		+ "If you did not request this OTP, please ignore this message.\n"
+            		+ "\n"
+            		+ "Thank you,  \n"
+            		+ "NRT-ATS Team");
             
             // ######################## Integration of SMS/Email Service ########################
             ColorPrinter.printlnYellow("Generated OTP for "+ user.getEmail()+" : " + otp);

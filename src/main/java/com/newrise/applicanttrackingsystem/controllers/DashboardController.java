@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.newrise.applicanttrackingsystem.repository.RolesRepository;
 import com.newrise.applicanttrackingsystem.repository.UsersRepository;
-import com.newrise.applicanttrackingsystem.services.UserServices;
+import com.newrise.applicanttrackingsystem.services.IUserServices;
 
 @RestController
 @CrossOrigin("*")
@@ -17,7 +17,7 @@ import com.newrise.applicanttrackingsystem.services.UserServices;
 public class DashboardController 
 {
 	@Autowired
-	private UserServices userServices;
+	private IUserServices iUserServices;
 	@Autowired
 	private RolesRepository rolesRepository;
 	@Autowired
