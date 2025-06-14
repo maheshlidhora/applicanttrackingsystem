@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.newrise.applicanttrackingsystem.services.IEmailService;
 
 @Service
-public class IEmailServiceImpl implements IEmailService
+public class EmailServiceImpl implements IEmailService
 {
 	@Autowired
 	private JavaMailSender javaMailSender;
