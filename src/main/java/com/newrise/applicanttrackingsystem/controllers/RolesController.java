@@ -4,12 +4,75 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
+<<<<<<< HEAD
 import com.newrise.applicanttrackingsystem.services.RoleServices;
+=======
+import com.newrise.applicanttrackingsystem.entities.Roles;
+import com.newrise.applicanttrackingsystem.services.IRoleServices;
+>>>>>>> d7282b574a48ffe8b4885e02b06454390eb87a14
 
 @RestController
 @CrossOrigin("*")
 public class RolesController 
 {
 	@Autowired
+<<<<<<< HEAD
 	private RoleServices roleServices;
+=======
+	private IRoleServices iRoleServices;
+	
+	@PostMapping("/addRole")
+	@PreAuthorize("hasRole('Admin')")
+	public ResponseEntity<Map<String, Object>> addRoleDetails(@RequestBody Roles roles) 
+	{
+	    Map<String, Object> response = new HashMap<>();
+	    try {
+	        if (iRoleServices.findRoleDetails(roles.getRoleName()).isPresent()) {
+	            response.put("success", false);
+	            response.put("message", "Role '" + roles.getRoleName() + "' already exists. Please choose a different name.");
+	            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+	        }
+	        String result = iRoleServices.addRole(roles);
+	        response.put("success", true);
+	        response.put("message", result);
+	        return ResponseEntity.ok(response);
+	    } catch (Exception ex) {
+	        response.put("success", false);
+	        response.put("message", "Failed to add role: " + ex.getMessage());
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+	    }
+	}
+	
+	@GetMapping("/getAllRoles")
+	@PreAuthorize("hasRole('Admin')")
+	public List<Roles> getAllRoleDetails(){
+		return iRoleServices.fineAllRoles();
+	}
+	
+	@DeleteMapping("/deleteRole/{id}")
+	@PreAuthorize("hasRole('Admin')")
+    public ResponseEntity<String> deleteRoleDetails(@PathVariable long id) {
+        String response = iRoleServices.deleteRole(id);
+        if ("Role is Deleted!!".equalsIgnoreCase(response)) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body("Role with ID " + id + " deleted successfully.");
+        } else if ("Role is not Present!!".equalsIgnoreCase(response)) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("Role with ID " + id + " not found.");
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An unexpected error occurred while deleting role with ID " + id + ".");
+        }
+    }
+	
+	@PatchMapping("/updateRole/{id}")
+	@PreAuthorize("hasRole('Admin')")
+	public String updateRoleDetails(@PathVariable long id, @RequestBody Roles roles)
+	{
+		return iRoleServices.updateRole(id, roles);
+	}
+>>>>>>> d7282b574a48ffe8b4885e02b06454390eb87a14
 }

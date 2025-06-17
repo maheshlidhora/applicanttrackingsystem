@@ -48,6 +48,8 @@ public class DataInitializer implements CommandLineRunner
             adminUser.setEmail(adminEmail);
             adminUser.setPassword("admin@123");
             adminUser.setRoles(Set.of(savedRoles.get("Admin"))); 
+            adminUser.setContact("8516030885");
+            adminUser.setVerified(true);
             usersRepository.save(adminUser);
             System.err.println("Default admin user created.");
         }
