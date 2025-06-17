@@ -1,7 +1,0 @@
-postjob ke end point
-
-"/savepost"
-"/getpost/{id}"
-"/updatepost/{id}"
-"/getAllpost"
-"/deletepost/{id}"

@@ -1,25 +1,33 @@
 package com.newrise.applicanttrackingsystem.controllers;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-<<<<<<< HEAD
-import com.newrise.applicanttrackingsystem.services.RoleServices;
-=======
 import com.newrise.applicanttrackingsystem.entities.Roles;
-import com.newrise.applicanttrackingsystem.services.IRoleServices;
->>>>>>> d7282b574a48ffe8b4885e02b06454390eb87a14
+import com.newrise.applicanttrackingsystem.services.RoleServices;
 
 @RestController
 @CrossOrigin("*")
+@RequestMapping("/user")
 public class RolesController 
 {
 	@Autowired
-<<<<<<< HEAD
 	private RoleServices roleServices;
-=======
-	private IRoleServices iRoleServices;
 	
 	@PostMapping("/addRole")
 	@PreAuthorize("hasRole('Admin')")
@@ -27,12 +35,12 @@ public class RolesController
 	{
 	    Map<String, Object> response = new HashMap<>();
 	    try {
-	        if (iRoleServices.findRoleDetails(roles.getRoleName()).isPresent()) {
+	        if (roleServices.findRoleDetails(roles.getRoleName()).isPresent()) {
 	            response.put("success", false);
 	            response.put("message", "Role '" + roles.getRoleName() + "' already exists. Please choose a different name.");
 	            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
 	        }
-	        String result = iRoleServices.addRole(roles);
+	        String result = roleServices.addRole(roles);
 	        response.put("success", true);
 	        response.put("message", result);
 	        return ResponseEntity.ok(response);
@@ -46,13 +54,13 @@ public class RolesController
 	@GetMapping("/getAllRoles")
 	@PreAuthorize("hasRole('Admin')")
 	public List<Roles> getAllRoleDetails(){
-		return iRoleServices.fineAllRoles();
+		return roleServices.fineAllRoles();
 	}
 	
 	@DeleteMapping("/deleteRole/{id}")
 	@PreAuthorize("hasRole('Admin')")
     public ResponseEntity<String> deleteRoleDetails(@PathVariable long id) {
-        String response = iRoleServices.deleteRole(id);
+        String response = roleServices.deleteRole(id);
         if ("Role is Deleted!!".equalsIgnoreCase(response)) {
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -72,7 +80,6 @@ public class RolesController
 	@PreAuthorize("hasRole('Admin')")
 	public String updateRoleDetails(@PathVariable long id, @RequestBody Roles roles)
 	{
-		return iRoleServices.updateRole(id, roles);
+		return roleServices.updateRole(id, roles);
 	}
->>>>>>> d7282b574a48ffe8b4885e02b06454390eb87a14
 }

@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.newrise.applicanttrackingsystem.entities.PostJob;
+import com.newrise.applicanttrackingsystem.entities.Users;
 import com.newrise.applicanttrackingsystem.services.PostjobService;
 
 import lombok.extern.log4j.Log4j2;
@@ -27,9 +29,11 @@ public class PostjobController {
 	@Autowired
 	private PostjobService postjobService;
 
-	@PostMapping("/savepost")
-	public ResponseEntity<PostJob> insertpostjob(@RequestBody PostJob postJob) {
-		PostJob savejob = postjobService.createPost(postJob);
+	@PostMapping("/savepost/{userid}")
+	@PreAuthorize("hasRole('HR Manager')")
+	public ResponseEntity<PostJob> insertpostjob(@PathVariable long userid ,@RequestBody PostJob postJob) {
+		
+		PostJob savejob = postjobService.createPost(userid ,postJob);
 		return new ResponseEntity<PostJob>(savejob, HttpStatus.CREATED);
 	}
 
@@ -42,6 +46,7 @@ public class PostjobController {
 	}
 
 	@PutMapping("/updatepost/{id}")
+//	@PreAuthorize("hasRole('HR_MANAGER')") 
 	public ResponseEntity<PostJob> updatepostjob(@PathVariable int id, @RequestBody PostJob postJob) {
 		PostJob postJob2 = postjobService.updatepostjob(postJob, id);
 		log.info("Successfully upadate post");
@@ -49,6 +54,7 @@ public class PostjobController {
 	}
 
 	@GetMapping("/getAllpost")
+	@PreAuthorize("hasRole('HR Manager')")
 	public ResponseEntity<List<PostJob>> getAllpost
 	(@RequestParam(value = "pagesize", defaultValue = "5" , required = false) int pagesize
 	, @RequestParam(value = "pageNumber" , defaultValue = "1", required = false) int pageNumber,
@@ -62,6 +68,7 @@ public class PostjobController {
 	}
 
 	@DeleteMapping("/deletepost/{id}")
+//	@PreAuthorize("hasRole('HR_MANAGER')") 
 	public void deletepost(@PathVariable int id) {
 		log.info("seccussefully delete post");
 		postjobService.deletePostjob(id);

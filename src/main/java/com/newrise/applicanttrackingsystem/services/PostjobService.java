@@ -3,13 +3,12 @@ package com.newrise.applicanttrackingsystem.services;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Sort;
-
 import com.newrise.applicanttrackingsystem.entities.PostJob;
+import com.newrise.applicanttrackingsystem.entities.Users;
 
 public interface PostjobService {
 
-	public PostJob createPost(PostJob postJob);
+	public PostJob createPost(long userid ,PostJob postJob);
 
 	public Optional<PostJob> getById(int id);
 

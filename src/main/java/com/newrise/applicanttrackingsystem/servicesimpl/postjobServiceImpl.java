@@ -9,10 +9,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.newrise.applicanttrackingsystem.entities.PostJob;
+import com.newrise.applicanttrackingsystem.entities.Users;
+import com.newrise.applicanttrackingsystem.repository.UsersRepository;
 import com.newrise.applicanttrackingsystem.repository.postjobRepository;
 import com.newrise.applicanttrackingsystem.services.PostjobService;
 
@@ -24,16 +25,29 @@ public class postjobServiceImpl implements PostjobService {
 
 	@Autowired
 	private postjobRepository postjobRepository;
+	
+	@Autowired
+    private UsersRepository usersRepository;
 
 	@Override
-	public PostJob createPost(PostJob postJob) {
-		try {
-			log.info("post insert seccussefully ");
-			return postjobRepository.save(postJob);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+	public PostJob createPost(long userid ,PostJob postJob) {
+		 try {
+		        // Find the user who is creating the job post
+		        Users user = usersRepository.findById(userid)
+		                .orElseThrow(() -> new RuntimeException("User not found with id: " + userid));
+		        
+		        // Associate the user with the job post
+		        postJob.setUser(user); 
+		        
+		        log.info("Post inserted successfully by user " + userid);
+		        return postjobRepository.save(postJob);
+		        
+		    } catch (Exception e) {
+		        log.error("Error creating post: ", e);
+		        // Depending on your application's design, you might want to throw the exception
+		        // or return null. Throwing is often better for letting the controller handle it.
+		        throw new RuntimeException("Could not create post: " + e.getMessage(), e);
+		    }
 	}
 
 	@Override
