@@ -1,0 +1,35 @@
+
+To clone a Git repository:
+						
+							git clone https://github.com/maheshlidhora/applicanttrackingsystem.git	<-|
+							
+							
+							**********************************************************************
+												IF YOU CLONE IT SUCCESSFULLY
+							**********************************************************************
+
+							
+							Cloning into 'applicanttrackingsystem'...
+							info: please complete authentication in your browser...
+							remote: Enumerating objects: 409, done.
+							remote: Counting objects: 100% (409/409), done.
+							remote: Compressing objects: 100% (247/247), done.
+							Rremote: Total 409 (delta 158), reused 351 (delta 106), pack-reused 0 (from 0)
+							Receiving objects: 100% (409/409), 2.65 MiB | 3.58 MiB/s, done.
+							Resolving deltas: 100% (158/158), done.
+							
+----------------------------------------------------------------------------------------------------------------------------------------
+
+Then Change your Directory into cloned repository:
+					
+							cd applicanttrackingsystem												<-|
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+To check git status:
+
+							git status																<-|		
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+			
