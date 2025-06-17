@@ -104,13 +104,14 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
-		<!-- Spring Boot DevTools :: Provides fast application restarts, LiveReload, and configurations for enhanced development experience. -->
+		<!-- Spring Boot DevTools :: Provides fast application restarts, LiveReload, and configurations for enhanced development experience. 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
+		-->
 
 		<!-- Lombok -->
 		<dependency>

@@ -3,6 +3,7 @@ package com.newrise.applicanttrackingsystem.controllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.newrise.applicanttrackingsystem.entities.Permissions;
 import com.newrise.applicanttrackingsystem.entities.Roles;
 import com.newrise.applicanttrackingsystem.services.IRoleServices;
 

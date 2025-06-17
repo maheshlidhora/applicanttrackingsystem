@@ -12,8 +12,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.newrise.applicanttrackingsystem.entities.Permissions;
 import com.newrise.applicanttrackingsystem.entities.Roles;
 import com.newrise.applicanttrackingsystem.entities.Users;
+import com.newrise.applicanttrackingsystem.repository.PermissionsRepository;
 import com.newrise.applicanttrackingsystem.repository.RolesRepository;
 import com.newrise.applicanttrackingsystem.repository.UsersRepository;
 import com.newrise.applicanttrackingsystem.utils.ColorPrinter;
@@ -25,6 +27,8 @@ public class DataInitializer implements CommandLineRunner
 	private RolesRepository rolesRepository;
 	@Autowired
 	private UsersRepository usersRepository;
+	@Autowired
+	private PermissionsRepository permissionsRepository;
 	
 	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
 	
@@ -45,6 +49,27 @@ public class DataInitializer implements CommandLineRunner
             savedRoles.put(roleName, role);
         }
 
+        // Predefined Permissions
+        List<String> permissionNames = Arrays.asList("CREATE", "VIEW", "UPDATE", "DELETE");
+        Map<String, Permissions> allPermissions = new HashMap<>();
+        for (String permName : permissionNames) {
+            Permissions permission = permissionsRepository.findByPermissionName(permName)
+                    .orElseGet(() -> {
+                        Permissions newPerm = new Permissions();
+                        newPerm.setPermissionName(permName);
+                        return permissionsRepository.save(newPerm);
+                    });
+            allPermissions.put(permName, permission);
+        }
+        
+        // Converting Map values into Set
+        Set<Permissions> allPermissionsIntoSetFormat = new HashSet<>(allPermissions.values());
+        
+        // Assigning all permissions to Admin
+        Roles adminRole = savedRoles.get("Admin");
+        adminRole.setPermissions(allPermissionsIntoSetFormat);
+        rolesRepository.save(adminRole);
+        
         // Creation of Predefined Admin User:
         String adminEmail = "admin@nrt.com";
         if (usersRepository.findByEmail(adminEmail).isEmpty()) {
