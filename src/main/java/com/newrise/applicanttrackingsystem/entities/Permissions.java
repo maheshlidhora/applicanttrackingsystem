@@ -15,8 +15,8 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Permissions")
-public class Permissions {
-
+public class Permissions 
+{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "permissionId", unique = true)
@@ -31,7 +31,7 @@ public class Permissions {
     private Set<Roles> roles;
 
 
-	public Long getPermissionId() {
+	public long getPermissionId() {
 		return permissionId;
 	}
 

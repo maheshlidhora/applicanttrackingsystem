@@ -13,15 +13,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-
+import lombok.Builder;
 
 @Entity
 @Table(name = "Users")
+@Builder
 public class Users 
 {
 	@Id
@@ -31,28 +33,25 @@ public class Users
 
 	@Column(name = "email", nullable = false, unique = true, length = 150)
 	@Email(message = "Email should be valid")
-    @NotBlank(message = "Email is required")
+	@NotBlank(message = "Email is required")
 	private String email;
 
 	@Column(name = "password", nullable = false, length = 150)
 	@NotBlank(message = "Password is required")
-    @Size(min = 6, message = "Password should be at least 6 characters to maximum 15 characters")
+	@Size(min = 6, message = "Password should be at least 6 characters to maximum 15 characters")
 	private String password;
-	
-	@ManyToMany (fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
-	@JoinTable (name = "user_roles",
-	joinColumns = {
-			@JoinColumn(name = "user_id", referencedColumnName = "userId")
-	},inverseJoinColumns = {
-			@JoinColumn(name = "role_id", referencedColumnName = "roleId") 
-	})
+
+	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.REFRESH })
+	@JoinTable(name = "user_roles", joinColumns = {
+			@JoinColumn(name = "user_id", referencedColumnName = "userId") }, inverseJoinColumns = {
+					@JoinColumn(name = "role_id", referencedColumnName = "roleId") })
 	private Set<Roles> roles;
-	
-	@Column(name = "contact", nullable = false, unique = true, length = 10)	
-    @Size(min = 10, max = 10, message = "Contact number must be 10 digits")
-    @Pattern(regexp = "^[0-9]{10}$", message = "Contact number must contain only digits")
-    private String contact;
-	
+
+	@Column(name = "contact", nullable = false, unique = true, length = 10)
+	@Size(min = 10, max = 10, message = "Contact number must be 10 digits")
+	@Pattern(regexp = "^[0-9]{10}$", message = "Contact number must contain only digits")
+	private String contact;
+
 	@Column(name = "otpCode", length = 6)
 	private String otpCode;
 
@@ -61,6 +60,14 @@ public class Users
 
 	@Column(name = "isVerified")
 	private boolean isVerified;
+
+	// Jobs created by HR Manager
+	@OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
+	private Set<Jobs> createdJobs;
+
+	// Jobs applied to by Candidate
+	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<JobApplications> jobApplications;
 
 	public long getUserId() {
 		return userId;
@@ -126,12 +133,29 @@ public class Users
 		this.isVerified = isVerified;
 	}
 
+	public Set<Jobs> getCreatedJobs() {
+		return createdJobs;
+	}
+
+	public void setCreatedJobs(Set<Jobs> createdJobs) {
+		this.createdJobs = createdJobs;
+	}
+
+	public Set<JobApplications> getJobApplications() {
+		return jobApplications;
+	}
+
+	public void setJobApplications(Set<JobApplications> jobApplications) {
+		this.jobApplications = jobApplications;
+	}
+
 	public Users(long userId,
 			@Email(message = "Email should be valid") @NotBlank(message = "Email is required") String email,
 			@NotBlank(message = "Password is required") @Size(min = 6, message = "Password should be at least 6 characters to maximum 15 characters") String password,
 			Set<Roles> roles,
-			@NotBlank(message = "Contact number is required") @Size(min = 7, max = 15, message = "Contact number should be between 7 and 15 digits") String contact,
-			String otpCode, LocalDateTime otpExpiry, boolean isVerified) {
+			@Size(min = 10, max = 10, message = "Contact number must be 10 digits") @Pattern(regexp = "^[0-9]{10}$", message = "Contact number must contain only digits") String contact,
+			String otpCode, LocalDateTime otpExpiry, boolean isVerified, Set<Jobs> createdJobs,
+			Set<JobApplications> jobApplications) {
 		super();
 		this.userId = userId;
 		this.email = email;
@@ -141,6 +165,8 @@ public class Users
 		this.otpCode = otpCode;
 		this.otpExpiry = otpExpiry;
 		this.isVerified = isVerified;
+		this.createdJobs = createdJobs;
+		this.jobApplications = jobApplications;
 	}
 
 	public Users() {
