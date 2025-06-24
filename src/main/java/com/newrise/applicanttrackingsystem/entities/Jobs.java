@@ -21,7 +21,6 @@ import lombok.Builder;
 
 @Entity
 @Table(name = "Jobs")
-@Builder
 public class Jobs 
 {
     @Id

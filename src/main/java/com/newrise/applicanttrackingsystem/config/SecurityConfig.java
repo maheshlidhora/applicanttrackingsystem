@@ -47,7 +47,14 @@ public class SecurityConfig
 	    new AntPathRequestMatcher("/user/deleteRole/{id}"),
 	    new AntPathRequestMatcher("/user/updateRole/{id}"),
 	    new AntPathRequestMatcher("/user/generateOtp"),
-	    new AntPathRequestMatcher("/user/verifyOtp")
+	    new AntPathRequestMatcher("/user/verifyOtp"),
+	    new AntPathRequestMatcher("/user/deleteUser"),
+	    new AntPathRequestMatcher("/user/allUsers"),
+	    new AntPathRequestMatcher("/user/findUser"),
+	    new AntPathRequestMatcher("/user/disableUser"),
+	    new AntPathRequestMatcher("/user/enableUser")
+	    
+//	    new AntPathRequestMatcher("/user/**")				//For All "/user/________"
 	};
 
     @Bean

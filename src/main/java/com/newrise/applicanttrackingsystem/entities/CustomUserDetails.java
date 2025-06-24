@@ -10,8 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 
 public class CustomUserDetails implements UserDetails 
-{
-
+{	
 	private static final long serialVersionUID = 1L;
 	private Optional<Users> user;
 
@@ -58,7 +57,7 @@ public class CustomUserDetails implements UserDetails
 
 	@Override
 	public boolean isEnabled() {
-	    return user.get().isVerified();
+	    return user.get().isVerified() && !user.get().isBlocked();
 	}
 
 }

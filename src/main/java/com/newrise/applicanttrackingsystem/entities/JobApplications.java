@@ -20,7 +20,6 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "jobApplications")
-@Builder
 public class JobApplications 
 {
     @Id

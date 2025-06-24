@@ -2,6 +2,7 @@ package com.newrise.applicanttrackingsystem.controllers;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -10,10 +11,12 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -76,7 +79,12 @@ public class UsersController
             response.put("token", token);
             response.put("user", Map.of(
                     "id", authenticatedUser.getUserId(),
+                    "userFullName", authenticatedUser.getFirstName() + " " + authenticatedUser.getLastName(),
+                    "firstName", authenticatedUser.getFirstName(),
+                    "lastName", authenticatedUser.getLastName(),
                     "email", authenticatedUser.getEmail(),
+                    "mobileNo", authenticatedUser.getMobileNo(),
+                    "userType", authenticatedUser.getUserType(),
                     "roles", roles
             ));
             return ResponseEntity.ok(response);
@@ -86,11 +94,6 @@ public class UsersController
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-	
-	@GetMapping("/showAll")
-	public String printAllUsers() {
-		return "Here, all users will be show.";
-	}
 	
 	@PostMapping("/register")
     public ResponseEntity<Map<String, Object>> getUserSignup(@RequestBody Users users) 
@@ -104,16 +107,16 @@ public class UsersController
             return ResponseEntity.badRequest().body(response);
         }
         
-        // Validation of Contact Format
-        if (users.getContact() == null || !isValidContact(users.getContact())) 
+        // Validation of Mobile No Format
+        if (users.getMobileNo() == null || !isValidContact(users.getMobileNo())) 
         {
             response.put("success", false);
             response.put("message", "Invalid contact format. Please provide a valid Contact.");
             return ResponseEntity.badRequest().body(response);
         }
         
-        // Check the contact is already present in our Database or Not?
-        if (usersRepository.findByEmail(users.getContact()).isPresent()) 
+        // Check the Mobile No is already present in our Database or Not?
+        if (usersRepository.findByEmail(users.getMobileNo()).isPresent()) 
         {
             response.put("success", false);
             response.put("message", "This contact is already registered. Please choose another contact.");
@@ -236,5 +239,40 @@ public class UsersController
 			}
 		}
     	return "Please provide a valid Email or OTP that can't be null";
+    }
+    
+    @DeleteMapping("/deleteUser")
+	@PreAuthorize("hasRole('Admin')")
+    public String deleteUserDetails(@RequestBody Users user)
+    {
+    	return iUserServices.deleteUser(user);
+    }
+    
+    @GetMapping("/allUsers")
+    @PreAuthorize("hasRole('Admin')")
+    public List<Users> getAllUsersDetails()
+    {
+    	return iUserServices.allUsers();
+    }
+    
+    @PostMapping("/findUser")
+    @PreAuthorize("hasRole('Admin')")
+    public Users findSingleUser(@RequestBody Users user) 
+    {
+    	return iUserServices.findUser(user.getEmail());
+    }
+    
+    @PatchMapping("/disableUser")
+    @PreAuthorize("hasRole('Admin')")
+    public String disableUserLogin(@RequestBody Users user) 
+    {
+    	return iUserServices.disableUser(user.getEmail());
+    }
+    
+    @PatchMapping("/enableUser")
+    @PreAuthorize("hasRole('Admin')")
+    public String enableUserLogin(@RequestBody Users user) 
+    {
+    	return iUserServices.enableUser(user.getEmail());
     }
 }

@@ -23,7 +23,6 @@ import lombok.Builder;
 
 @Entity
 @Table(name = "Users")
-@Builder
 public class Users 
 {
 	@Id
@@ -31,6 +30,12 @@ public class Users
 	@Column(name = "userId", unique = true)
 	private long userId;
 
+	@Column(name = "firstName", nullable = false, length = 75)
+	private String firstName;
+	
+	@Column(name = "lastName", nullable = false, length = 75)
+	private String lastName;
+	
 	@Column(name = "email", nullable = false, unique = true, length = 150)
 	@Email(message = "Email should be valid")
 	@NotBlank(message = "Email is required")
@@ -46,20 +51,29 @@ public class Users
 			@JoinColumn(name = "user_id", referencedColumnName = "userId") }, inverseJoinColumns = {
 					@JoinColumn(name = "role_id", referencedColumnName = "roleId") })
 	private Set<Roles> roles;
+	
+	@Column(name = "userType", nullable = false, length = 250)
+	private String userType;
 
-	@Column(name = "contact", nullable = false, unique = true, length = 10)
+	@Column(name = "mobileNo", nullable = false, unique = true, length = 10)
 	@Size(min = 10, max = 10, message = "Contact number must be 10 digits")
 	@Pattern(regexp = "^[0-9]{10}$", message = "Contact number must contain only digits")
-	private String contact;
+	private String mobileNo;
 
 	@Column(name = "otpCode", length = 6)
 	private String otpCode;
 
 	@Column(name = "otpExpiry")
 	private LocalDateTime otpExpiry;
+	
+	@Column(name = "createdAt", updatable = false)
+	private LocalDateTime createdAt = LocalDateTime.now();
 
 	@Column(name = "isVerified")
 	private boolean isVerified;
+	
+	@Column(name = "isBlocked", columnDefinition = "BOOLEAN DEFAULT FALSE")
+	private boolean isBlocked = false;
 
 	// Jobs created by HR Manager
 	@OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
@@ -75,6 +89,22 @@ public class Users
 
 	public void setUserId(long userId) {
 		this.userId = userId;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public String getEmail() {
@@ -101,12 +131,20 @@ public class Users
 		this.roles = roles;
 	}
 
-	public String getContact() {
-		return contact;
+	public String getUserType() {
+		return userType;
 	}
 
-	public void setContact(String contact) {
-		this.contact = contact;
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
+
+	public String getMobileNo() {
+		return mobileNo;
+	}
+
+	public void setMobileNo(String mobileNo) {
+		this.mobileNo = mobileNo;
 	}
 
 	public String getOtpCode() {
@@ -125,12 +163,28 @@ public class Users
 		this.otpExpiry = otpExpiry;
 	}
 
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
 	public boolean isVerified() {
 		return isVerified;
 	}
 
 	public void setVerified(boolean isVerified) {
 		this.isVerified = isVerified;
+	}
+
+	public boolean isBlocked() {
+		return isBlocked;
+	}
+
+	public void setBlocked(boolean isBlocked) {
+		this.isBlocked = isBlocked;
 	}
 
 	public Set<Jobs> getCreatedJobs() {
@@ -149,22 +203,27 @@ public class Users
 		this.jobApplications = jobApplications;
 	}
 
-	public Users(long userId,
+	public Users(long userId, String firstName, String lastName,
 			@Email(message = "Email should be valid") @NotBlank(message = "Email is required") String email,
 			@NotBlank(message = "Password is required") @Size(min = 6, message = "Password should be at least 6 characters to maximum 15 characters") String password,
-			Set<Roles> roles,
-			@Size(min = 10, max = 10, message = "Contact number must be 10 digits") @Pattern(regexp = "^[0-9]{10}$", message = "Contact number must contain only digits") String contact,
-			String otpCode, LocalDateTime otpExpiry, boolean isVerified, Set<Jobs> createdJobs,
-			Set<JobApplications> jobApplications) {
+			Set<Roles> roles, String userType,
+			@Size(min = 10, max = 10, message = "Contact number must be 10 digits") @Pattern(regexp = "^[0-9]{10}$", message = "Contact number must contain only digits") String mobileNo,
+			String otpCode, LocalDateTime otpExpiry, LocalDateTime createdAt, boolean isVerified, boolean isBlocked,
+			Set<Jobs> createdJobs, Set<JobApplications> jobApplications) {
 		super();
 		this.userId = userId;
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.email = email;
 		this.password = password;
 		this.roles = roles;
-		this.contact = contact;
+		this.userType = userType;
+		this.mobileNo = mobileNo;
 		this.otpCode = otpCode;
 		this.otpExpiry = otpExpiry;
+		this.createdAt = createdAt;
 		this.isVerified = isVerified;
+		this.isBlocked = isBlocked;
 		this.createdJobs = createdJobs;
 		this.jobApplications = jobApplications;
 	}

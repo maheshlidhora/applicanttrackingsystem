@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -74,10 +75,13 @@ public class DataInitializer implements CommandLineRunner
         String adminEmail = "admin@nrt.com";
         if (usersRepository.findByEmail(adminEmail).isEmpty()) {
             Users adminUser = new Users();
+            adminUser.setFirstName("New Rise");
+            adminUser.setLastName("Admin");
             adminUser.setEmail(adminEmail);
             adminUser.setPassword(bCryptPasswordEncoder.encode("admin@123"));
             adminUser.setRoles(Set.of(savedRoles.get("Admin"))); 
-            adminUser.setContact("8516030885");
+            adminUser.setUserType(adminUser.getRoles().stream().map(Roles::getRoleName).collect(Collectors.joining(" + ")));
+            adminUser.setMobileNo("9876543210");
             adminUser.setVerified(true);
             usersRepository.save(adminUser);
             ColorPrinter.printlnGreen("Default Admin User Created..!!");

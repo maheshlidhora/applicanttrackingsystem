@@ -1,6 +1,8 @@
 package com.newrise.applicanttrackingsystem.servicesimpl;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.newrise.applicanttrackingsystem.entities.Roles;
 import com.newrise.applicanttrackingsystem.entities.Users;
 import com.newrise.applicanttrackingsystem.repository.UsersRepository;
 import com.newrise.applicanttrackingsystem.services.IOtpService;
@@ -51,6 +54,7 @@ public class UserServicesImpl implements IUserServices
 	{
 		if (users != null) 
 		{
+			users.setUserType(users.getRoles().stream().map(Roles::getRoleName).collect(Collectors.joining(" + ")));
 			users.setPassword(bCryptPasswordEncoder.encode(users.getPassword()));
 			try 
 			{
@@ -78,5 +82,77 @@ public class UserServicesImpl implements IUserServices
 			return jwtService.generateToken(users);
 		}
 		return null;
+	}
+
+	@Override
+	public List<Users> allUsers() 
+	{
+		return usersRepository.findAll();
+	}
+
+	@Override
+	public String deleteUser(Users users) 
+	{
+		Users tagetUser = null;
+		try 
+		{
+			tagetUser = usersRepository.findByEmail(users.getEmail()).get();
+		} 
+		catch (Exception e) 
+		{
+			return "User Not Found..!!";
+		}
+		if (tagetUser.getEmail().equals(users.getEmail())) 
+		{
+			usersRepository.deleteById(tagetUser.getUserId());
+			return "User Deleted Successfully!!"; 
+		}
+		return "User Not Deleted due to some error..!!";
+	}
+
+	@Override
+	public Users findUser(String email) 
+	{
+		try 
+		{
+			Users user = usersRepository.findByEmail(email).get();
+			return (user!=null)?user:null;
+		} 
+		catch (Exception e) 
+		{
+			return null;
+		}
+	}
+
+	@Override
+	public String disableUser(String email) 
+	{
+		try 
+		{
+			Users user = usersRepository.findByEmail(email).get();
+			user.setBlocked(true);
+			usersRepository.save(user);
+			return "User is disabled for Login..!!";
+		} 
+		catch (Exception e) 
+		{
+			return "User Not Found..!!";
+		}
+	}
+
+	@Override
+	public String enableUser(String email) 
+	{
+		try 
+		{
+			Users user = usersRepository.findByEmail(email).get();
+			user.setBlocked(false);
+			usersRepository.save(user);
+			return "User is enabled for Login..!!";
+		} 
+		catch (Exception e) 
+		{
+			return "User Not Found..!!";
+		}
 	}
 }
