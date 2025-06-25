@@ -55,6 +55,9 @@ public class Jobs
     @Column(nullable = false)
     private int openings;
 
+	@Column(name = "createdAt", updatable = false)
+	private LocalDateTime createdAt = LocalDateTime.now();
+    
     @Column(nullable = false, updatable = false)
     private LocalDateTime postedDate;
 
@@ -77,6 +80,8 @@ public class Jobs
     public void onCreate() {
         this.postedDate = LocalDateTime.now();
     }
+	
+	//	*************************************  Getter, Setter & Constructors  *************************************
 
 	public long getJobId() {
 		return jobId;
@@ -118,11 +123,19 @@ public class Jobs
 		this.location = location;
 	}
 
+	public String getExperience() {
+		return experience;
+	}
+
+	public void setExperience(String experience) {
+		this.experience = experience;
+	}
+
 	public double getSalary() {
 		return salary;
 	}
 
-	public void setSalary(Double salary) {
+	public void setSalary(double salary) {
 		this.salary = salary;
 	}
 
@@ -130,8 +143,16 @@ public class Jobs
 		return openings;
 	}
 
-	public void setOpenings(Integer openings) {
+	public void setOpenings(int openings) {
 		this.openings = openings;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
 
 	public LocalDateTime getPostedDate() {
@@ -178,17 +199,21 @@ public class Jobs
 			@NotBlank(message = "Job description is required") String description,
 			@NotBlank(message = "Department is required") String department,
 			@NotBlank(message = "Location is required") String location,
-			@NotNull(message = "Salary is required") Double salary,
-			@NotNull(message = "Openings count is required") Integer openings, LocalDateTime postedDate,
-			LocalDateTime closingDate, boolean isActive, Users createdBy, Set<JobApplications> jobApplications) {
+			@NotBlank(message = "Experience is required") String experience,
+			@NotNull(message = "Salary is required") double salary,
+			@NotNull(message = "Openings count is required") int openings, LocalDateTime createdAt,
+			LocalDateTime postedDate, LocalDateTime closingDate, boolean isActive, Users createdBy,
+			Set<JobApplications> jobApplications) {
 		super();
 		this.jobId = jobId;
 		this.title = title;
 		this.description = description;
 		this.department = department;
 		this.location = location;
+		this.experience = experience;
 		this.salary = salary;
 		this.openings = openings;
+		this.createdAt = createdAt;
 		this.postedDate = postedDate;
 		this.closingDate = closingDate;
 		this.isActive = isActive;

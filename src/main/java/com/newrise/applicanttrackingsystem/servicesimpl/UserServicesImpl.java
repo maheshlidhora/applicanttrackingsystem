@@ -1,5 +1,6 @@
 package com.newrise.applicanttrackingsystem.servicesimpl;
 
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,7 +14,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.newrise.applicanttrackingsystem.entities.Roles;
+import com.newrise.applicanttrackingsystem.entities.Token;
 import com.newrise.applicanttrackingsystem.entities.Users;
+import com.newrise.applicanttrackingsystem.repository.TokensRepository;
 import com.newrise.applicanttrackingsystem.repository.UsersRepository;
 import com.newrise.applicanttrackingsystem.services.IOtpService;
 import com.newrise.applicanttrackingsystem.services.IUserServices;
@@ -25,19 +28,17 @@ public class UserServicesImpl implements IUserServices
 {
 	@Autowired
 	private UsersRepository usersRepository;
-	
+	@Autowired
+	private TokensRepository tokensRepository;
 	@Autowired
 	private AuthenticationManager authenticationManager;
-	
 	@Autowired
 	private JWTService jwtService;
-	
 //	@Autowired
 //	private OtpService otpService;
 	
 	//	For Password Encryption
 	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
-	
 	@Override
 	public Optional <Users> findUserDetails(String email, String password) 
 	{
@@ -79,7 +80,27 @@ public class UserServicesImpl implements IUserServices
 				.authenticate(new UsernamePasswordAuthenticationToken(users.getEmail(), users.getPassword()));
 		if (authentication.isAuthenticated()) 
 		{
-			return jwtService.generateToken(users);
+			// Get user from DB
+	        Users dbUser = usersRepository.findByEmail(users.getEmail()).orElse(null);
+	        if (dbUser == null) return null;
+	        // Blacklist all old valid tokens
+	        blacklistedAllTokens(dbUser);
+	        // Now Generate New Token
+	        String generatedToken = jwtService.generateToken(users);
+	        
+	        Token token = new Token();
+	        token.setToken(generatedToken);
+	        token.setBlacklisted(false);
+	        token.setExpired(false);
+	        token.setCreatedAt(java.time.LocalDateTime.now());
+	        token.setExpiresAt(jwtService.extractExpiration(generatedToken)
+	        		.toInstant()
+	        	    .atZone(ZoneId.systemDefault())
+	        	    .toLocalDateTime());
+	        token.setUserId(dbUser);
+	        tokensRepository.save(token);
+	        
+			return generatedToken;
 		}
 		return null;
 	}
@@ -154,5 +175,53 @@ public class UserServicesImpl implements IUserServices
 		{
 			return "User Not Found..!!";
 		}
+	}
+
+	@Override
+	public String upadateUser(Users users) 
+	{
+		try 
+		{
+			Users user = usersRepository.findByEmail(users.getEmail()).get();
+			usersRepository.save(user);
+			return "User updated successfully..!!";
+		} 
+		catch (Exception e) 
+		{
+			return "User Not Found..!!";
+		}
+	}
+
+	@Override
+	public void blacklistedAllTokens(Users user) 
+	{
+	    List<Token> validTokens = tokensRepository.findAllByUserAndExpiredIsFalseAndIsBlacklistedFalse(user);
+	    if (validTokens.isEmpty()) return;
+
+	    for (Token token : validTokens) {
+	        token.setExpired(true);
+	        token.setBlacklisted(true);
+	    }
+	    tokensRepository.saveAll(validTokens);
+	}
+
+	@Override
+	public boolean validateToken(String token) 
+	{
+	    try 
+	    {
+	        // Validate JWT Structure & Signature
+	        String username = jwtService.extractUserName(token);
+	        if (username == null) return false;
+	        // Check into Database for token validity
+	        Optional<Token> tokenOptional = tokensRepository.findByToken(token);
+	        if (tokenOptional.isEmpty()) return false;
+	        Token storedToken = tokenOptional.get();
+	        return !storedToken.isExpired() && !storedToken.isBlacklisted();
+	    } 
+	    catch (Exception e) 
+	    {
+	        return false;
+	    }
 	}
 }

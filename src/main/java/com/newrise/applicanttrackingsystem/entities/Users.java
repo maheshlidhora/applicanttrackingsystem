@@ -82,6 +82,12 @@ public class Users
 	// Jobs applied to by Candidate
 	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<JobApplications> jobApplications;
+	
+	// Tokens issued for this user
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<Token> tokens;
+	
+	//	*************************************  Getter, Setter & Constructors  *************************************
 
 	public long getUserId() {
 		return userId;
@@ -203,13 +209,21 @@ public class Users
 		this.jobApplications = jobApplications;
 	}
 
+	public Set<Token> getTokens() {
+		return tokens;
+	}
+
+	public void setTokens(Set<Token> tokens) {
+		this.tokens = tokens;
+	}
+
 	public Users(long userId, String firstName, String lastName,
 			@Email(message = "Email should be valid") @NotBlank(message = "Email is required") String email,
 			@NotBlank(message = "Password is required") @Size(min = 6, message = "Password should be at least 6 characters to maximum 15 characters") String password,
 			Set<Roles> roles, String userType,
 			@Size(min = 10, max = 10, message = "Contact number must be 10 digits") @Pattern(regexp = "^[0-9]{10}$", message = "Contact number must contain only digits") String mobileNo,
 			String otpCode, LocalDateTime otpExpiry, LocalDateTime createdAt, boolean isVerified, boolean isBlocked,
-			Set<Jobs> createdJobs, Set<JobApplications> jobApplications) {
+			Set<Jobs> createdJobs, Set<JobApplications> jobApplications, Set<Token> tokens) {
 		super();
 		this.userId = userId;
 		this.firstName = firstName;
@@ -226,6 +240,7 @@ public class Users
 		this.isBlocked = isBlocked;
 		this.createdJobs = createdJobs;
 		this.jobApplications = jobApplications;
+		this.tokens = tokens;
 	}
 
 	public Users() {

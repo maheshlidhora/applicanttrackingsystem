@@ -44,6 +44,11 @@ public class DataInitializer implements CommandLineRunner
                     .orElseGet(() -> {
                         Roles newRole = new Roles();
                         newRole.setRoleName(roleName);
+                        newRole.setSlug(
+                        		
+                        		roleName.replaceAll("\\s+", "-").toLowerCase()
+                        		
+                        		);
                         newRole.setUsers(new HashSet<>());
                         return rolesRepository.save(newRole);
                     });
@@ -58,6 +63,11 @@ public class DataInitializer implements CommandLineRunner
                     .orElseGet(() -> {
                         Permissions newPerm = new Permissions();
                         newPerm.setPermissionName(permName);
+                        newPerm.setSlug(
+                        		
+                        		permName.replaceAll("\\s+", "-").toLowerCase()
+                        		
+                        		);
                         return permissionsRepository.save(newPerm);
                     });
             allPermissions.put(permName, permission);

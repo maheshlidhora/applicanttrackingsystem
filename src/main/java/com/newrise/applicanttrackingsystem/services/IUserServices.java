@@ -13,10 +13,12 @@ public interface IUserServices
 	public List<Users> allUsers();
 	public Optional<Users> findUserDetails(String email, String password);
 	public Users findUser(String email);
-//	public String upadateUser();
+	public String upadateUser(Users users);
 	public String deleteUser(Users users);
 	public String varifyUser(Users users);
-	
 	public String disableUser(String email);
 	public String enableUser(String email);
+	
+	public void blacklistedAllTokens(Users user);
+	public boolean validateToken(String token);
 }

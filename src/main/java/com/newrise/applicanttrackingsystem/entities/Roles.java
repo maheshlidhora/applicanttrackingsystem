@@ -1,9 +1,10 @@
 package com.newrise.applicanttrackingsystem.entities;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.JoinColumn;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,6 +12,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
@@ -37,7 +39,14 @@ public class Roles {
 	    inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "permissionId")
 	)
 	private Set<Permissions> permissions;
-
+	
+	@Column(name = "slug", unique = true)
+	private String slug;
+	
+	@Column(name = "createdAt", updatable = false)
+	private LocalDateTime createdAt = LocalDateTime.now();
+	
+	//	*************************************  Getter, Setter & Constructors  *************************************
 
 	public long getRoleId() {
 		return roleId;
@@ -71,12 +80,31 @@ public class Roles {
 		this.permissions = permissions;
 	}
 
-	public Roles(long roleId, String roleName, Set<Users> users, Set<Permissions> permissions) {
+	public String getSlug() {
+		return slug;
+	}
+
+	public void setSlug(String slug) {
+		this.slug = slug;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Roles(long roleId, String roleName, Set<Users> users, Set<Permissions> permissions, String slug,
+			LocalDateTime createdAt) {
 		super();
 		this.roleId = roleId;
 		this.roleName = roleName;
 		this.users = users;
 		this.permissions = permissions;
+		this.slug = slug;
+		this.createdAt = createdAt;
 	}
 
 	public Roles() {

@@ -44,6 +44,8 @@ public class JobApplications
     public void onApply() {
         this.appliedAt = LocalDateTime.now();
     }
+	
+	//	*************************************  Getter, Setter & Constructors  *************************************
 
 	public long getApplicationId() {
 		return applicationId;
