@@ -83,8 +83,16 @@ public class UserServicesImpl implements IUserServices
 			// Get user from DB
 	        Users dbUser = usersRepository.findByEmail(users.getEmail()).orElse(null);
 	        if (dbUser == null) return null;
-	        // Blacklist all old valid tokens
+	        // Blacklist all old valid tokens 
 	        blacklistedAllTokens(dbUser);
+	        
+	        // Or Clean up them
+	        List<Token> userTokens = tokensRepository.findAllByUserAndExpiredIsTrueAndIsBlacklistedTrue(dbUser);
+	        for (Token token : userTokens) 
+	        {
+	        	tokensRepository.deleteById(token.getTokenId());
+			}
+	        
 	        // Now Generate New Token
 	        String generatedToken = jwtService.generateToken(users);
 	        

@@ -41,6 +41,7 @@ public class SecurityConfig
 	
 	@SuppressWarnings({ "deprecation", "removal" })
 	private static final RequestMatcher[] CSRF_IGNORED = new RequestMatcher[] {
+		new AntPathRequestMatcher("/user/"),
 	    new AntPathRequestMatcher("/user/register"),
 	    new AntPathRequestMatcher("/user/login"),
 	    new AntPathRequestMatcher("/user/addRole"),

@@ -13,4 +13,5 @@ public interface TokensRepository extends JpaRepository<Token, Long>
 {
 	Optional<Token> findByToken(String token);
 	List<Token> findAllByUserAndExpiredIsFalseAndIsBlacklistedFalse(Users user);
+	List<Token> findAllByUserAndExpiredIsTrueAndIsBlacklistedTrue(Users user);
 }
