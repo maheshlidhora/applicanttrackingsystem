@@ -6,8 +6,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,10 +19,7 @@ import com.newrise.applicanttrackingsystem.entities.Token;
 import com.newrise.applicanttrackingsystem.entities.Users;
 import com.newrise.applicanttrackingsystem.repository.TokensRepository;
 import com.newrise.applicanttrackingsystem.repository.UsersRepository;
-import com.newrise.applicanttrackingsystem.services.IOtpService;
 import com.newrise.applicanttrackingsystem.services.IUserServices;
-
-import io.jsonwebtoken.JwtBuilder;
 
 @Service
 public class UserServicesImpl implements IUserServices 
@@ -231,5 +229,10 @@ public class UserServicesImpl implements IUserServices
 	    {
 	        return false;
 	    }
+	}
+
+	@Override
+	public Page<Users> getAllUsersPaginated(Pageable pageable) {
+	    return usersRepository.findAll(pageable);
 	}
 }

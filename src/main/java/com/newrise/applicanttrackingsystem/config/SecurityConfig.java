@@ -45,6 +45,7 @@ public class SecurityConfig
 	    new AntPathRequestMatcher("/user/register"),
 	    new AntPathRequestMatcher("/user/login"),
 	    new AntPathRequestMatcher("/user/addRole"),
+	    new AntPathRequestMatcher("/user/getRoleByName"),
 	    new AntPathRequestMatcher("/user/deleteRole/{id}"),
 	    new AntPathRequestMatcher("/user/updateRole/{id}"),
 	    new AntPathRequestMatcher("/user/generateOtp"),
@@ -53,7 +54,10 @@ public class SecurityConfig
 	    new AntPathRequestMatcher("/user/allUsers"),
 	    new AntPathRequestMatcher("/user/findUser"),
 	    new AntPathRequestMatcher("/user/disableUser"),
-	    new AntPathRequestMatcher("/user/enableUser")
+	    new AntPathRequestMatcher("/user/enableUser"),
+//	    new AntPathRequestMatcher("/user/allUsersPaginated/?{page}&{size}")
+	    new AntPathRequestMatcher("/user/allUsersPaginated"),
+	    new AntPathRequestMatcher("/user/allUsersPaginated/**")
 	    
 //	    new AntPathRequestMatcher("/user/**")				//For All "/user/________"
 	};

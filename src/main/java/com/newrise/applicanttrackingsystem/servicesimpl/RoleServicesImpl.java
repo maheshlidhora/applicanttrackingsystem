@@ -92,7 +92,14 @@ public class RoleServicesImpl implements IRoleServices
 	@Override
 	public Optional<Roles> findRoleDetails(String roleName) 
 	{
-		return rolesRepository.findByRoleName(roleName);
+		try 
+		{
+			return rolesRepository.findByRoleName(roleName);
+		} 
+		catch (Exception e) 
+		{
+			return null;
+		}
 	}
 	
 	@Override

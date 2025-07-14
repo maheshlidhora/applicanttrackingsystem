@@ -84,4 +84,31 @@ public class RolesController
 	{
 		return iRoleServices.updateRole(id, roles);
 	}
+	
+	@PostMapping("/getRoleByName")
+	@PreAuthorize("hasRole('Admin')")
+    public ResponseEntity<Map<String, Object>> getRoleDetailesByName(@RequestBody Roles roles) {
+        Map<String, Object> response = new HashMap<>();
+        if (roles.getRoleName() == null) 
+        {
+            response.put("success", false);
+            response.put("message", "roleName required.");
+            return ResponseEntity.badRequest().body(response);
+        }
+        if (roles.getRoleName().isBlank()) 
+        {
+            response.put("success", false);
+            response.put("message", "roleName required.");
+            return ResponseEntity.badRequest().body(response);
+        }
+        if (iRoleServices.findRoleDetails(roles.getRoleName()).isEmpty()) 
+        {
+            response.put("success", false);
+            response.put("message", "Role not found.");
+            return ResponseEntity.badRequest().body(response);
+		}
+        response.put("success", true);
+        response.put("roleDetails", iRoleServices.findRoleDetails(roles.getRoleName()).get());
+        return ResponseEntity.ok(response);
+    }
 }

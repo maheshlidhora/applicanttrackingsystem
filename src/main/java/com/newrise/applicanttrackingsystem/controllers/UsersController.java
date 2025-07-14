@@ -9,6 +9,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.newrise.applicanttrackingsystem.entities.Roles;
@@ -150,7 +154,8 @@ public class UsersController
         Set<Roles> filteredRoles = users.getRoles().stream()
                 .filter(role -> {
                     String roleName = role.getRoleName();
-                    return roleName.equalsIgnoreCase("HR Manager") || roleName.equalsIgnoreCase("Candidate");
+//                    return roleName.equalsIgnoreCase("HR Manager") || roleName.equalsIgnoreCase("Candidate");
+                    return roleName.equalsIgnoreCase("Candidate");
                 })
                 .collect(Collectors.toSet());
         if (filteredRoles.isEmpty()) 
@@ -254,6 +259,20 @@ public class UsersController
     {
     	return iUserServices.allUsers();
     }
+    
+	//    GET /api/users/allUsers?page=1&size=5
+	//    Authorization: Bearer <token>
+    @GetMapping(value = {"/allUsersPaginated", "/allUsersPaginated/"})
+    @PreAuthorize("hasRole('Admin')")
+    public ResponseEntity<Page<Users>> getAllUsersDetailsPaginated(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Users> usersPage = iUserServices.getAllUsersPaginated(pageable);
+        return ResponseEntity.ok(usersPage);
+    }
+    
     
     @PostMapping("/findUser")
     @PreAuthorize("hasRole('Admin')")

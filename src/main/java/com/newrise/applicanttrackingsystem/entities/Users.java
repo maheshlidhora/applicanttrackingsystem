@@ -3,6 +3,8 @@ package com.newrise.applicanttrackingsystem.entities;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +21,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
 
 @Entity
 @Table(name = "Users")
@@ -77,14 +78,17 @@ public class Users
 
 	// Jobs created by HR Manager
 	@OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<Jobs> createdJobs;
 
 	// Jobs applied to by Candidate
 	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
 	private Set<JobApplications> jobApplications;
 	
 	// Tokens issued for this user
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
 	private Set<Token> tokens;
 	
 	//	*************************************  Getter, Setter & Constructors  *************************************

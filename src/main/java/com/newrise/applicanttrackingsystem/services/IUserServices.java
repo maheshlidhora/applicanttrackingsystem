@@ -3,9 +3,10 @@ package com.newrise.applicanttrackingsystem.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.newrise.applicanttrackingsystem.entities.Users;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import io.jsonwebtoken.JwtBuilder;
+import com.newrise.applicanttrackingsystem.entities.Users;
 
 public interface IUserServices 
 {
@@ -21,4 +22,6 @@ public interface IUserServices
 	
 	public void blacklistedAllTokens(Users user);
 	public boolean validateToken(String token);
+	
+	Page<Users> getAllUsersPaginated(Pageable pageable);
 }
