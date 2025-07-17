@@ -44,6 +44,7 @@ public class SecurityConfig
 		new AntPathRequestMatcher("/user/"),
 	    new AntPathRequestMatcher("/user/register"),
 	    new AntPathRequestMatcher("/user/login"),
+	    new AntPathRequestMatcher("/user/logout"),
 	    new AntPathRequestMatcher("/user/addRole"),
 	    new AntPathRequestMatcher("/user/getRoleByName"),
 	    new AntPathRequestMatcher("/user/deleteRole/{id}"),

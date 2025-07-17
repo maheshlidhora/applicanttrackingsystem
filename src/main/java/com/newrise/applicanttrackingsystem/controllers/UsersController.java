@@ -15,22 +15,27 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.newrise.applicanttrackingsystem.entities.Roles;
+import com.newrise.applicanttrackingsystem.entities.Token;
 import com.newrise.applicanttrackingsystem.entities.Users;
 import com.newrise.applicanttrackingsystem.repository.RolesRepository;
+import com.newrise.applicanttrackingsystem.repository.TokensRepository;
 import com.newrise.applicanttrackingsystem.repository.UsersRepository;
 import com.newrise.applicanttrackingsystem.services.IOtpService;
 import com.newrise.applicanttrackingsystem.services.IUserServices;
+import com.newrise.applicanttrackingsystem.servicesimpl.JWTService;
 
 import jakarta.validation.Valid;
 
@@ -48,7 +53,10 @@ public class UsersController
     private UsersRepository usersRepository;
 	@Autowired
 	private IOtpService iOtpService;
-
+	@Autowired
+	private TokensRepository tokensRepository;
+	@Autowired
+	private JWTService jwtService;
 	
 	@GetMapping("/")
 	public String getUserIndex()
@@ -273,7 +281,6 @@ public class UsersController
         return ResponseEntity.ok(usersPage);
     }
     
-    
     @PostMapping("/findUser")
     @PreAuthorize("hasRole('Admin')")
     public Users findSingleUser(@RequestBody Users user) 
@@ -293,5 +300,36 @@ public class UsersController
     public String enableUserLogin(@RequestBody Users user) 
     {
     	return iUserServices.enableUser(user.getEmail());
+    }
+    
+    @PostMapping("/logout")
+    @PreAuthorize("isAuthenticated()")
+    @Transactional
+    public ResponseEntity<Map<String, Object>> logout(@RequestHeader("Authorization") String authHeader) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            response.put("success", false);
+            response.put("message", "Authorization header is missing or invalid.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
+        String token = authHeader.substring(7);
+        try {
+            Token savedToken = tokensRepository.findByToken(token).orElse(null);
+            if (savedToken != null) {
+                savedToken.setExpired(true);
+                savedToken.setBlacklisted(true);
+                tokensRepository.save(savedToken);
+            }
+
+            response.put("success", true);
+            response.put("message", "Logged out successfully. Token has been invalidated.");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Logout failed: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 }
