@@ -20,8 +20,6 @@ public interface IUserServices
 	public String disableUser(String email);
 	public String enableUser(String email);
 	
-	public void blacklistedAllTokens(Users user);
-	public boolean validateToken(String token);
-	
+	public void blacklistedAllTokens(Users user);	
 	Page<Users> getAllUsersPaginated(Pageable pageable);
 }

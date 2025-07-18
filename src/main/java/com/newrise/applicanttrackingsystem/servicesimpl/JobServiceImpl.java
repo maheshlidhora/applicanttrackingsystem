@@ -10,15 +10,20 @@ import com.newrise.applicanttrackingsystem.services.IJobService;
 @Service
 public class JobServiceImpl implements IJobService 
 {
-
 	@Autowired
 	private JobsRepository jobsRepository;
-	
+
 	@Override
-	public Jobs createPost(long userid, Jobs job) 
+	public boolean createPost(Jobs job) 
 	{
-		// TODO Auto-generated method stub
-		return null;
+		try 
+		{
+			jobsRepository.save(job);
+			return true;
+		} 
+		catch (Exception e) {
+			return false;
+		}
 	}
 
 }

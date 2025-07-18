@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.newrise.applicanttrackingsystem.services.IUserServices;
+import com.newrise.applicanttrackingsystem.services.ITokenServices;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -24,8 +24,11 @@ public class CustomUserDetails implements UserDetails
 	@Autowired
 	private HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 	
+//	This Autowired is commented because it was contained validateToken() method  but it is now moved on  TokenServicesImpl
+//	@Autowired
+//	private IUserServices iUserServices;
 	@Autowired
-	private IUserServices iUserServices;
+	private ITokenServices iTokenServices;
 
 	public CustomUserDetails(Optional<Users> user) {
 		super();
@@ -80,6 +83,6 @@ public class CustomUserDetails implements UserDetails
 		{
 			return this.isAccountNonLocked();
 		}
-        return (authHeader != null && authHeader.startsWith("Bearer "))?iUserServices.validateToken(authHeader.substring(7)):false;
+        return (authHeader != null && authHeader.startsWith("Bearer "))?iTokenServices.validateToken(authHeader.substring(7)):false;
 	}
 }

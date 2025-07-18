@@ -35,7 +35,6 @@ import com.newrise.applicanttrackingsystem.repository.TokensRepository;
 import com.newrise.applicanttrackingsystem.repository.UsersRepository;
 import com.newrise.applicanttrackingsystem.services.IOtpService;
 import com.newrise.applicanttrackingsystem.services.IUserServices;
-import com.newrise.applicanttrackingsystem.servicesimpl.JWTService;
 
 import jakarta.validation.Valid;
 
@@ -55,8 +54,6 @@ public class UsersController
 	private IOtpService iOtpService;
 	@Autowired
 	private TokensRepository tokensRepository;
-	@Autowired
-	private JWTService jwtService;
 	
 	@GetMapping("/")
 	public String getUserIndex()
@@ -162,8 +159,8 @@ public class UsersController
         Set<Roles> filteredRoles = users.getRoles().stream()
                 .filter(role -> {
                     String roleName = role.getRoleName();
-//                    return roleName.equalsIgnoreCase("HR Manager") || roleName.equalsIgnoreCase("Candidate");
-                    return roleName.equalsIgnoreCase("Candidate");
+                    return roleName.equalsIgnoreCase("HR Manager") || roleName.equalsIgnoreCase("Candidate");
+//                    return roleName.equalsIgnoreCase("Candidate");
                 })
                 .collect(Collectors.toSet());
         if (filteredRoles.isEmpty()) 

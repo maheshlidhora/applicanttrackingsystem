@@ -42,23 +42,29 @@ public class SecurityConfig
 	@SuppressWarnings({ "deprecation", "removal" })
 	private static final RequestMatcher[] CSRF_IGNORED = new RequestMatcher[] {
 		new AntPathRequestMatcher("/user/"),
-	    new AntPathRequestMatcher("/user/register"),
+	   
 	    new AntPathRequestMatcher("/user/login"),
 	    new AntPathRequestMatcher("/user/logout"),
-	    new AntPathRequestMatcher("/user/addRole"),
-	    new AntPathRequestMatcher("/user/getRoleByName"),
-	    new AntPathRequestMatcher("/user/deleteRole/{id}"),
-	    new AntPathRequestMatcher("/user/updateRole/{id}"),
+	    
 	    new AntPathRequestMatcher("/user/generateOtp"),
 	    new AntPathRequestMatcher("/user/verifyOtp"),
-	    new AntPathRequestMatcher("/user/deleteUser"),
-	    new AntPathRequestMatcher("/user/allUsers"),
-	    new AntPathRequestMatcher("/user/findUser"),
-	    new AntPathRequestMatcher("/user/disableUser"),
 	    new AntPathRequestMatcher("/user/enableUser"),
-//	    new AntPathRequestMatcher("/user/allUsersPaginated/?{page}&{size}")
+	    new AntPathRequestMatcher("/user/disableUser"),
+	    
+	    new AntPathRequestMatcher("/user/register"),
+	    new AntPathRequestMatcher("/user/findUser"),
 	    new AntPathRequestMatcher("/user/allUsersPaginated"),
-	    new AntPathRequestMatcher("/user/allUsersPaginated/**")
+	  //new AntPathRequestMatcher("/user/allUsersPaginated/?{page}&{size}")
+	    new AntPathRequestMatcher("/user/allUsersPaginated/**"),
+	    new AntPathRequestMatcher("/user/allUsers"),
+	    new AntPathRequestMatcher("/user/deleteUser"),
+	    
+	    new AntPathRequestMatcher("/user/addRole"),
+	    new AntPathRequestMatcher("/user/getRoleByName"),
+	    new AntPathRequestMatcher("/user/updateRole/{id}"),
+	    new AntPathRequestMatcher("/user/deleteRole/{id}"),
+	    
+	    new AntPathRequestMatcher("/user/createJob")
 	    
 //	    new AntPathRequestMatcher("/user/**")				//For All "/user/________"
 	};

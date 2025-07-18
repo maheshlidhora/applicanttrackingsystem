@@ -212,26 +212,6 @@ public class UserServicesImpl implements IUserServices
 	}
 
 	@Override
-	public boolean validateToken(String token) 
-	{
-	    try 
-	    {
-	        // Validate JWT Structure & Signature
-	        String username = jwtService.extractUserName(token);
-	        if (username == null) return false;
-	        // Check into Database for token validity
-	        Optional<Token> tokenOptional = tokensRepository.findByToken(token);
-	        if (tokenOptional.isEmpty()) return false;
-	        Token storedToken = tokenOptional.get();
-	        return !storedToken.isExpired() && !storedToken.isBlacklisted();
-	    } 
-	    catch (Exception e) 
-	    {
-	        return false;
-	    }
-	}
-
-	@Override
 	public Page<Users> getAllUsersPaginated(Pageable pageable) {
 	    return usersRepository.findAll(pageable);
 	}

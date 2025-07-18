@@ -49,11 +49,11 @@ public class Jobs
     
     @NotNull(message = "Salary is required")
     @Column(nullable = false)
-    private double salary;
+    private Double salary;
 
     @NotNull(message = "Openings count is required")
     @Column(nullable = false)
-    private int openings;
+    private Integer openings;
 
 	@Column(name = "createdAt", updatable = false)
 	private LocalDateTime createdAt = LocalDateTime.now();
@@ -79,9 +79,9 @@ public class Jobs
     @PrePersist
     public void onCreate() {
         this.postedDate = LocalDateTime.now();
-    }
-	
-	//	*************************************  Getter, Setter & Constructors  *************************************
+    }	
+    
+    //	*************************************  Getter, Setter & Constructors  *************************************
 
 	public long getJobId() {
 		return jobId;
@@ -131,19 +131,19 @@ public class Jobs
 		this.experience = experience;
 	}
 
-	public double getSalary() {
+	public Double getSalary() {
 		return salary;
 	}
 
-	public void setSalary(double salary) {
+	public void setSalary(Double salary) {
 		this.salary = salary;
 	}
 
-	public int getOpenings() {
+	public Integer getOpenings() {
 		return openings;
 	}
 
-	public void setOpenings(int openings) {
+	public void setOpenings(Integer openings) {
 		this.openings = openings;
 	}
 
@@ -200,8 +200,8 @@ public class Jobs
 			@NotBlank(message = "Department is required") String department,
 			@NotBlank(message = "Location is required") String location,
 			@NotBlank(message = "Experience is required") String experience,
-			@NotNull(message = "Salary is required") double salary,
-			@NotNull(message = "Openings count is required") int openings, LocalDateTime createdAt,
+			@NotNull(message = "Salary is required") Double salary,
+			@NotNull(message = "Openings count is required") Integer openings, LocalDateTime createdAt,
 			LocalDateTime postedDate, LocalDateTime closingDate, boolean isActive, Users createdBy,
 			Set<JobApplications> jobApplications) {
 		super();
@@ -223,5 +223,6 @@ public class Jobs
 
 	public Jobs() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 }
