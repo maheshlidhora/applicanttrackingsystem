@@ -34,8 +34,9 @@ public class JobApplications
     @JoinColumn(name = "candidate_id", nullable = false)
     private Users candidate;
 
-    @Column(nullable = false)
-    private String applicationStatus = "APPLIED"; // APPLIED, WITHDRAWN
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "statusName", nullable = false)
+    private ApplicationStatus applicationStatus; // APPLIED, WITHDRAWN
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime appliedAt;
@@ -44,8 +45,8 @@ public class JobApplications
     public void onApply() {
         this.appliedAt = LocalDateTime.now();
     }
-	
-	//	*************************************  Getter, Setter & Constructors  *************************************
+    
+    //	*************************************  Getter, Setter & Constructors  *************************************
 
 	public long getApplicationId() {
 		return applicationId;
@@ -71,11 +72,11 @@ public class JobApplications
 		this.candidate = candidate;
 	}
 
-	public String getApplicationStatus() {
+	public ApplicationStatus getApplicationStatus() {
 		return applicationStatus;
 	}
 
-	public void setApplicationStatus(String applicationStatus) {
+	public void setApplicationStatus(ApplicationStatus applicationStatus) {
 		this.applicationStatus = applicationStatus;
 	}
 
@@ -87,7 +88,7 @@ public class JobApplications
 		this.appliedAt = appliedAt;
 	}
 
-	public JobApplications(long applicationId, Jobs job, Users candidate, String applicationStatus,
+	public JobApplications(long applicationId, Jobs job, Users candidate, ApplicationStatus applicationStatus,
 			LocalDateTime appliedAt) {
 		super();
 		this.applicationId = applicationId;
@@ -99,5 +100,6 @@ public class JobApplications
 
 	public JobApplications() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 }

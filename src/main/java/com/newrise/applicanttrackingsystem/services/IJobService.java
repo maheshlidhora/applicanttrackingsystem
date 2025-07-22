@@ -19,8 +19,7 @@ public interface IJobService
 	
 //	------------------------- FOR CANDIDATE -------------------------
 	Page<Jobs> getAllJobsPaginated(Pageable pageable);
-//	public boolean applyForJob();
-//	public boolean withdrawFromJob();
+
 	
 	
 }
