@@ -53,8 +53,8 @@ public class SecurityConfig
 	    
 	    new AntPathRequestMatcher("/user/register"),
 	    new AntPathRequestMatcher("/user/findUser"),
+//	    new AntPathRequestMatcher("/user/allUsersPaginated/?{page}&{size}"),
 	    new AntPathRequestMatcher("/user/allUsersPaginated"),
-	  //new AntPathRequestMatcher("/user/allUsersPaginated/?{page}&{size}")
 	    new AntPathRequestMatcher("/user/allUsersPaginated/**"),
 	    new AntPathRequestMatcher("/user/allUsers"),
 	    new AntPathRequestMatcher("/user/deleteUser"),
@@ -64,7 +64,19 @@ public class SecurityConfig
 	    new AntPathRequestMatcher("/user/updateRole/{id}"),
 	    new AntPathRequestMatcher("/user/deleteRole/{id}"),
 	    
-	    new AntPathRequestMatcher("/user/createJob")
+//	    ------------------------- To HR -------------------------	    
+	    new AntPathRequestMatcher("/user/createJob"),
+	    new AntPathRequestMatcher("/user/getJobDetails/{jobId}"),
+	    new AntPathRequestMatcher("/user/doUpdateInJob/{jobId}"),
+	    new AntPathRequestMatcher("/user/deleteJob/{id}"),
+//	    new AntPathRequestMatcher("/user/getallJobsPaginatedToHR/?{page}&{size}"),
+	    new AntPathRequestMatcher("/user/getallJobsToHR"),
+	    new AntPathRequestMatcher("/user/getallJobsToHR/**"),
+	    
+//	    ------------------------- To Candidate -------------------------
+//	    new AntPathRequestMatcher("/user/getallJobs/?{page}&{size}"),
+	    new AntPathRequestMatcher("/user/getallJobs"),
+	    new AntPathRequestMatcher("/user/getallJobs/**"),
 	    
 //	    new AntPathRequestMatcher("/user/**")				//For All "/user/________"
 	};
