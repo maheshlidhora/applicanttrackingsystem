@@ -77,7 +77,7 @@ public class DataInitializer implements CommandLineRunner {
 		// Predefined Application Status
 		List<String> statusNames = Arrays.asList("Applied", "Review", "Shortlisted", "Telephonic Screening",
 				"Assessment", "Technical Round", "HR Interview", "Offered", "Offer Accepted", "Offer Declined",
-				"Onboarding", "Joined", "Rejected");
+				"Onboarding", "Joined", "Rejected", "Withdraw");
 		Map<String, ApplicationStatus> allAppliactionStatus = new HashMap<>();
 		for (String name : statusNames) {
 			ApplicationStatus applicationStatus = applicationStatusRepository.findByStatusName(name).orElseGet(() -> {

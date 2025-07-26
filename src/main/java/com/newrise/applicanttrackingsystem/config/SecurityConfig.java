@@ -77,6 +77,10 @@ public class SecurityConfig
 //	    new AntPathRequestMatcher("/user/getallJobs/?{page}&{size}"),
 	    new AntPathRequestMatcher("/user/getallJobs"),
 	    new AntPathRequestMatcher("/user/getallJobs/**"),
+	    new AntPathRequestMatcher("/user/applyForJob/{jobId}"),
+//	    new AntPathRequestMatcher("/user/findAppliedApplications/?{page}&{size}"),
+	    new AntPathRequestMatcher("/user/findAppliedApplications"),
+	    new AntPathRequestMatcher("/user/findAppliedApplications/**"),
 	    
 //	    new AntPathRequestMatcher("/user/**")				//For All "/user/________"
 	};

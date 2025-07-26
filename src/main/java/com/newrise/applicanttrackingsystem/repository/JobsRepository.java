@@ -1,13 +1,13 @@
 package com.newrise.applicanttrackingsystem.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.newrise.applicanttrackingsystem.entities.Jobs;
 import com.newrise.applicanttrackingsystem.entities.Users;
-import java.util.List;
-import java.util.Optional;
 
 
 public interface JobsRepository extends JpaRepository<Jobs, Long>

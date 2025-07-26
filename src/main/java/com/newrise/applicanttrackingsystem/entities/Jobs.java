@@ -1,7 +1,11 @@
 package com.newrise.applicanttrackingsystem.entities;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -61,8 +65,9 @@ public class Jobs
     @Column(nullable = false, updatable = false)
     private LocalDateTime postedDate;
 
-    @Column
-    private LocalDateTime closingDate;
+    @NotNull(message = "Closing date is required")
+    @Column(nullable = false)
+    private LocalDate closingDate;
 
     @Column(nullable = false)
     private boolean isActive = true;    
@@ -73,6 +78,7 @@ public class Jobs
     private Users createdBy;
 
     // All candidate applications for this job
+    @JsonIgnore
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<JobApplications> jobApplications;
     
@@ -163,11 +169,11 @@ public class Jobs
 		this.postedDate = postedDate;
 	}
 
-	public LocalDateTime getClosingDate() {
+	public LocalDate getClosingDate() {
 		return closingDate;
 	}
 
-	public void setClosingDate(LocalDateTime closingDate) {
+	public void setClosingDate(LocalDate closingDate) {
 		this.closingDate = closingDate;
 	}
 
@@ -202,7 +208,7 @@ public class Jobs
 			@NotBlank(message = "Experience is required") String experience,
 			@NotNull(message = "Salary is required") Double salary,
 			@NotNull(message = "Openings count is required") Integer openings, LocalDateTime createdAt,
-			LocalDateTime postedDate, LocalDateTime closingDate, boolean isActive, Users createdBy,
+			LocalDateTime postedDate, LocalDate closingDate, boolean isActive, Users createdBy,
 			Set<JobApplications> jobApplications) {
 		super();
 		this.jobId = jobId;

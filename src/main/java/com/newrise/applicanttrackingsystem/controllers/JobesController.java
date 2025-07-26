@@ -43,11 +43,11 @@ public class JobesController {
 		Map<String, Object> response = new HashMap<>();
 		boolean status = job.getTitle() != null && job.getDescription() != null && job.getDepartment() != null
 				&& job.getLocation() != null && job.getExperience() != null && job.getSalary() != null
-				&& job.getOpenings() != null && job.getCreatedBy() != null;
+				&& job.getOpenings() != null && job.getClosingDate() != null && job.getCreatedBy() != null;
 		if (status) {
 			response.put("success", false);
 			response.put("message",
-					"Provide all the necessary details for Job-Creation such as: Title, Description, Department, Location, Experience, Salary & Openings.");
+					"Provide all the necessary details for Job-Creation such as: Title, Description, Department, Location, Experience, Salary, Openings & Closing");
 			return ResponseEntity.badRequest().body(response);
 		}
 		job.setCreatedBy(iTokenServices.getCurrentUserObj());

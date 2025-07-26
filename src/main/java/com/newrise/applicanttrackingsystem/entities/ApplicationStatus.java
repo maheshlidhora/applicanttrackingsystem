@@ -2,6 +2,8 @@ package com.newrise.applicanttrackingsystem.entities;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,6 +25,7 @@ public class ApplicationStatus
 	@Column(name = "statusName", unique = true, length = 75)
 	private String statusName;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "applicationStatus", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<JobApplications> jobApplications;
 	

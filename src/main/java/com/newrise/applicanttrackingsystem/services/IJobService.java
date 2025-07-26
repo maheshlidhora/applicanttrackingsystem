@@ -19,7 +19,4 @@ public interface IJobService
 	
 //	------------------------- FOR CANDIDATE -------------------------
 	Page<Jobs> getAllJobsPaginated(Pageable pageable);
-
-	
-	
 }

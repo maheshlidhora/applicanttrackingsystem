@@ -12,11 +12,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "jobApplications")
@@ -35,8 +30,8 @@ public class JobApplications
     private Users candidate;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "statusName", nullable = false)
-    private ApplicationStatus applicationStatus; // APPLIED, WITHDRAWN
+    @JoinColumn(name = "status_id", nullable = false)
+    private ApplicationStatus applicationStatus; // Applied, "Withdraw"
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime appliedAt;
