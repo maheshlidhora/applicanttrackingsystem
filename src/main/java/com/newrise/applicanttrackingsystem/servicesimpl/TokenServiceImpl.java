@@ -50,6 +50,7 @@ public class TokenServiceImpl implements ITokenServices
 		}
 		if (CURRENT_USER != null) {
 			this.CURRENT_USER_OBJ = iUserServices.findUser(CURRENT_USER);
+//			Users user = tokensRepository.findByToken(CURRENT_TOKEN).get().getUserId();		// BEST WAY
 		}
 	}
 	

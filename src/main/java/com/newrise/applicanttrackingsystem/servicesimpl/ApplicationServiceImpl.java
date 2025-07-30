@@ -1,6 +1,5 @@
 package com.newrise.applicanttrackingsystem.servicesimpl;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,7 @@ public class ApplicationServiceImpl implements IApplicationService {
 	}
 
 	@Override
-	public Optional <JobApplications> findByCandidateAndApplicationId(Users candidate, Long applicationId) {
+	public Optional<JobApplications> findByCandidateAndApplicationId(Users candidate, Long applicationId) {
 		try {
 			return applicationsRepository.findByCandidateAndApplicationId(candidate, applicationId);
 		} catch (Exception e) {
@@ -55,11 +54,10 @@ public class ApplicationServiceImpl implements IApplicationService {
 	}
 
 	@Override
-	public boolean updateApplication(Users candidate, Long applicationId) {
-		Optional <JobApplications> application = applicationsRepository.findByCandidateAndApplicationId(candidate, applicationId);
-		if (application.isPresent()) 
-		{
-			application.get().setApplicationStatus(statusRepository.findByStatusName("Withdraw").get());
+	public boolean withdrawApplication(Users candidate, JobApplications application) {
+		if (application!=null) {
+			application.setApplicationStatus(statusRepository.findByStatusName("Withdraw").get());
+			applicationsRepository.save(application);
 			return true;
 		}
 		return false;

@@ -62,19 +62,6 @@ public class JobesController {
 
 		return ResponseEntity.ok(response);
 	}
-	
-	//    GET /api/users/allUsers?page=1&size=5
-	//    Authorization: Bearer <token>
-    @GetMapping(value = {"/getallJobs", "/getallJobs/"})
-    @PreAuthorize("isAuthenticated() and hasRole('Candidate')")
-    public ResponseEntity<Page<Jobs>> getAllJobsDetailsPaginated(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size) 
-    {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Jobs> jobsPage = iJobService.getAllJobsPaginated(pageable);
-        return ResponseEntity.ok(jobsPage);
-    }
     
     @PostMapping(value = {"/getallJobsToHR", "/getallJobsToHR/"})
     @PreAuthorize("isAuthenticated() and hasRole('HR Manager')")

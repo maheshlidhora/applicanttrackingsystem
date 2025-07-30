@@ -14,5 +14,5 @@ public interface IApplicationService
 	public boolean applyForJob(Jobs jobs, Users candidate);
 	public Page<JobApplications> findAllAppliedApplications(Users candidate, Pageable pageable); // For List Out all Applied Application to Candidate.
 	public Optional<JobApplications> findByCandidateAndApplicationId(Users candidate, Long applicationId);	// FindCandidateApplication --> To Check & Update Status
-	public boolean updateApplication(Users candidate, Long applicationId);
+	public boolean withdrawApplication(Users candidate, JobApplications application);
 }
