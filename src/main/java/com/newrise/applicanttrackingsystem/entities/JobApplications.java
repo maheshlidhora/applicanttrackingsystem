@@ -36,12 +36,14 @@ public class JobApplications
     @Column(nullable = false, updatable = false)
     private LocalDateTime appliedAt;
 
+    // Optional resume file name (.pdf or .doc)
+    @Column(name = "resume_file", nullable = true)
+    private String resumeFileName;
+    
     @PrePersist
     public void onApply() {
         this.appliedAt = LocalDateTime.now();
-    }
-    
-    //	*************************************  Getter, Setter & Constructors  *************************************
+    }//	*************************************  Getter, Setter & Constructors  *************************************
 
 	public long getApplicationId() {
 		return applicationId;
@@ -83,14 +85,23 @@ public class JobApplications
 		this.appliedAt = appliedAt;
 	}
 
+	public String getResumeFileName() {
+		return resumeFileName;
+	}
+
+	public void setResumeFileName(String resumeFileName) {
+		this.resumeFileName = resumeFileName;
+	}
+
 	public JobApplications(long applicationId, Jobs job, Users candidate, ApplicationStatus applicationStatus,
-			LocalDateTime appliedAt) {
+			LocalDateTime appliedAt, String resumeFileName) {
 		super();
 		this.applicationId = applicationId;
 		this.job = job;
 		this.candidate = candidate;
 		this.applicationStatus = applicationStatus;
 		this.appliedAt = appliedAt;
+		this.resumeFileName = resumeFileName;
 	}
 
 	public JobApplications() {

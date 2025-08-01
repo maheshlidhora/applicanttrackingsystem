@@ -1,9 +1,15 @@
 package com.newrise.applicanttrackingsystem.controllers;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.newrise.applicanttrackingsystem.entities.JobApplications;
 import com.newrise.applicanttrackingsystem.entities.Jobs;
@@ -46,10 +53,8 @@ public class JobApplicationsController {
 	// Authorization: Bearer <token>
 	@GetMapping(value = { "/getallJobs", "/getallJobs/" })
 	@PreAuthorize("isAuthenticated() and hasRole('Candidate')")
-	public ResponseEntity<Page<Jobs>> getAllJobsDetailsPaginated(
-			@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "10") int size) 
-	{
+	public ResponseEntity<Page<Jobs>> getAllJobsDetailsPaginated(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
 		Pageable pageable = PageRequest.of(page, size);
 		Page<Jobs> jobsPage = iJobService.getAllJobsPaginated(pageable);
 		return ResponseEntity.ok(jobsPage);
@@ -57,7 +62,8 @@ public class JobApplicationsController {
 
 	@PostMapping("/applyForJob/{jobId}")
 	@PreAuthorize("hasRole('Candidate')")
-	public ResponseEntity<Map<String, Object>> applyForJob(@PathVariable long jobId) {
+	public ResponseEntity<Map<String, Object>> applyForJob(@PathVariable long jobId,
+			@RequestParam(value = "resume", required = false) MultipartFile resumeFile) {
 		Map<String, Object> response = new HashMap<>();
 		Users candidate = iTokenServices.getCurrentUserObj();
 		Optional<Jobs> optionalJob = jobsRepository.findById(jobId);
@@ -84,7 +90,38 @@ public class JobApplicationsController {
 			response.put("message", "You have already applied for this job.");
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
 		}
-		boolean applicationCreated = iApplicationService.applyForJob(job, candidate);
+		// Resume File Verification
+		String resumeFileName = null;
+		if (resumeFile != null && !resumeFile.isEmpty()) {
+			String originalFileName = resumeFile.getOriginalFilename();
+			String fileExtension = "";
+			if (originalFileName != null && originalFileName.contains(".")) {
+				fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+			}
+			if (!fileExtension.equalsIgnoreCase(".pdf") && !fileExtension.equalsIgnoreCase(".doc")) {
+				response.put("success", false);
+				response.put("message", "Only PDF or DOC resume files are allowed.");
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+			}
+			// Generate unique filename for Resume before saving it in our local machine.
+			resumeFileName = UUID.randomUUID().toString() + fileExtension;
+			// Set the local path to save the resume in local machine.
+			String uploadDir = "uploads/resumes/";
+			File uploadPath = new File(uploadDir);
+			if (!uploadPath.exists()) {
+				uploadPath.mkdirs(); // create directory if not exists
+			}
+			try {
+				Path filePath = Paths.get(uploadDir + resumeFileName);
+				Files.copy(resumeFile.getInputStream(), filePath);
+			} catch (IOException e) {
+				response.put("success", false);
+				response.put("message", "Resume upload failed: " + e.getMessage());
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+			}
+		}
+		// Proceed with application saving
+		boolean applicationCreated = iApplicationService.applyForJob(job, candidate, resumeFileName);
 		if (applicationCreated) {
 			response.put("success", true);
 			response.put("message", "Application submitted successfully.");
@@ -99,9 +136,7 @@ public class JobApplicationsController {
 	@GetMapping(value = { "/findAppliedApplications", "/findAppliedApplications/" })
 	@PreAuthorize("isAuthenticated() and hasRole('Candidate')")
 	public ResponseEntity<Page<JobApplications>> findAllAppliedApplicationByCandidate(
-			@RequestParam(defaultValue = "0") int page, 
-			@RequestParam(defaultValue = "10") int size) 
-	{
+			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
 		Users candidate = iTokenServices.getCurrentUserObj();
 		Pageable pageable = PageRequest.of(page, size);
 		Page<JobApplications> applicationsPage = iApplicationService.findAllAppliedApplications(candidate, pageable);
@@ -111,7 +146,7 @@ public class JobApplicationsController {
 			return ResponseEntity.ok(applicationsPage);
 		}
 	}
-	
+
 	@PatchMapping("/withdrawApplication/{applicationId}")
 	@PreAuthorize("isAuthenticated() and hasRole('Candidate')")
 	public ResponseEntity<Map<String, Object>> withdrawFormApplication(@PathVariable long applicationId) {

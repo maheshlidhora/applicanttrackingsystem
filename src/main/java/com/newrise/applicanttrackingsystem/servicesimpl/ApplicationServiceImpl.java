@@ -21,20 +21,36 @@ public class ApplicationServiceImpl implements IApplicationService {
 	@Autowired
 	private ApplicationStatusRepository statusRepository;
 
+//	@Override
+//	public boolean applyForJob(Jobs jobs, Users candidate) {
+//		JobApplications newApplications = new JobApplications();
+//		newApplications.setJob(jobs);
+//		newApplications.setCandidate(candidate);
+//		newApplications.setApplicationStatus(statusRepository.findByStatusName("Applied").get());
+//		try {
+//			applicationsRepository.save(newApplications);
+//			return true;
+//		} catch (Exception e) {
+//			return false;
+//		}
+//	}
+
 	@Override
-	public boolean applyForJob(Jobs jobs, Users candidate) {
+	public boolean applyForJob(Jobs jobs, Users candidate, String resumeFileName) {
 		JobApplications newApplications = new JobApplications();
 		newApplications.setJob(jobs);
 		newApplications.setCandidate(candidate);
+		newApplications.setResumeFileName(resumeFileName);
 		newApplications.setApplicationStatus(statusRepository.findByStatusName("Applied").get());
 		try {
 			applicationsRepository.save(newApplications);
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}
-
+	
 	@Override
 	public Optional<JobApplications> findByCandidateAndApplicationId(Users candidate, Long applicationId) {
 		try {
