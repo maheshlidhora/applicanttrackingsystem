@@ -1,7 +1,11 @@
 package com.newrise.applicanttrackingsystem.entities;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
@@ -40,10 +45,14 @@ public class JobApplications
     @Column(name = "resume_file", nullable = true)
     private String resumeFileName;
     
+    @OneToMany(mappedBy = "jobApplication", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<Interview> interviews;
+
     @PrePersist
     public void onApply() {
         this.appliedAt = LocalDateTime.now();
-    }
+    } 
     
     //	*************************************  Getter, Setter & Constructors  *************************************
 
@@ -95,8 +104,16 @@ public class JobApplications
 		this.resumeFileName = resumeFileName;
 	}
 
+	public Set<Interview> getInterviews() {
+		return interviews;
+	}
+
+	public void setInterviews(Set<Interview> interviews) {
+		this.interviews = interviews;
+	}
+
 	public JobApplications(long applicationId, Jobs job, Users candidate, ApplicationStatus applicationStatus,
-			LocalDateTime appliedAt, String resumeFileName) {
+			LocalDateTime appliedAt, String resumeFileName, Set<Interview> interviews) {
 		super();
 		this.applicationId = applicationId;
 		this.job = job;
@@ -104,6 +121,7 @@ public class JobApplications
 		this.applicationStatus = applicationStatus;
 		this.appliedAt = appliedAt;
 		this.resumeFileName = resumeFileName;
+		this.interviews = interviews;
 	}
 
 	public JobApplications() {

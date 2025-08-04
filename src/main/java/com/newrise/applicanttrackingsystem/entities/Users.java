@@ -91,6 +91,11 @@ public class Users
 	@JsonIgnore
 	private Set<Token> tokens;
 	
+	@OneToMany(mappedBy = "interviewer", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private Set<Interview> interviewsAsInterviewer;
+
+	
 	//	*************************************  Getter, Setter & Constructors  *************************************
 
 	public long getUserId() {
@@ -221,13 +226,22 @@ public class Users
 		this.tokens = tokens;
 	}
 
+	public Set<Interview> getInterviewsAsInterviewer() {
+		return interviewsAsInterviewer;
+	}
+
+	public void setInterviewsAsInterviewer(Set<Interview> interviewsAsInterviewer) {
+		this.interviewsAsInterviewer = interviewsAsInterviewer;
+	}
+	
 	public Users(long userId, String firstName, String lastName,
 			@Email(message = "Email should be valid") @NotBlank(message = "Email is required") String email,
 			@NotBlank(message = "Password is required") @Size(min = 6, message = "Password should be at least 6 characters to maximum 15 characters") String password,
 			Set<Roles> roles, String userType,
 			@Size(min = 10, max = 10, message = "Contact number must be 10 digits") @Pattern(regexp = "^[0-9]{10}$", message = "Contact number must contain only digits") String mobileNo,
 			String otpCode, LocalDateTime otpExpiry, LocalDateTime createdAt, boolean isVerified, boolean isBlocked,
-			Set<Jobs> createdJobs, Set<JobApplications> jobApplications, Set<Token> tokens) {
+			Set<Jobs> createdJobs, Set<JobApplications> jobApplications, Set<Token> tokens,
+			Set<Interview> interviewsAsInterviewer) {
 		super();
 		this.userId = userId;
 		this.firstName = firstName;
@@ -245,9 +259,11 @@ public class Users
 		this.createdJobs = createdJobs;
 		this.jobApplications = jobApplications;
 		this.tokens = tokens;
+		this.interviewsAsInterviewer = interviewsAsInterviewer;
 	}
 
 	public Users() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 }
