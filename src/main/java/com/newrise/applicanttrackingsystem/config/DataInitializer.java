@@ -14,11 +14,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.newrise.applicanttrackingsystem.entities.ApplicationStatus;
+import com.newrise.applicanttrackingsystem.entities.Mode;
 import com.newrise.applicanttrackingsystem.entities.Permissions;
 import com.newrise.applicanttrackingsystem.entities.Roles;
 import com.newrise.applicanttrackingsystem.entities.Users;
 import com.newrise.applicanttrackingsystem.repository.ApplicationStatusRepository;
 import com.newrise.applicanttrackingsystem.repository.ApplicationsRepository;
+import com.newrise.applicanttrackingsystem.repository.ModesRepository;
 import com.newrise.applicanttrackingsystem.repository.PermissionsRepository;
 import com.newrise.applicanttrackingsystem.repository.RolesRepository;
 import com.newrise.applicanttrackingsystem.repository.UsersRepository;
@@ -34,6 +36,8 @@ public class DataInitializer implements CommandLineRunner {
 	private PermissionsRepository permissionsRepository;
 	@Autowired
 	private ApplicationStatusRepository applicationStatusRepository;
+	@Autowired
+	private ModesRepository modesRepository;
 
 	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
 
@@ -75,9 +79,21 @@ public class DataInitializer implements CommandLineRunner {
 		}
 
 		// Predefined Application Status
-		List<String> statusNames = Arrays.asList("Applied", "Review", "Shortlisted", "Telephonic Screening",
-				"Assessment", "Technical Round", "HR Interview", "Offered", "Offer Accepted", "Offer Declined",
-				"Onboarding", "Joined", "Rejected", "Withdraw");
+		List<String> statusNames = Arrays.asList(
+				"Applied", 
+				"Review", "Shortlisted", 
+				"Interview Scheduled", 
+				"Telephonic/Screening Round", "Assessment", "Technical Round", "HR Interview", 
+				"Interview Completed", 
+				"Interview Cancelled", 
+				"Offered", 
+				"Offer Accepted", 
+				"Onboarding", 
+				"Offer Rejected",
+				"Joined", 
+				"Hold", "Rejected", 
+				"Withdraw"
+				);
 		Map<String, ApplicationStatus> allAppliactionStatus = new HashMap<>();
 		for (String name : statusNames) {
 			ApplicationStatus applicationStatus = applicationStatusRepository.findByStatusName(name).orElseGet(() -> {
@@ -86,6 +102,19 @@ public class DataInitializer implements CommandLineRunner {
 				return applicationStatusRepository.save(newStatus);
 			});
 			allAppliactionStatus.put(name, applicationStatus);
+		}
+		
+		// Predefined Modes
+		List<String> modesName = Arrays.asList("Online", "Offline", "On-site", "Work from Home");
+		Map<String, Mode> allModes = new HashMap<>();
+		for (String name : modesName) 
+		{
+			Mode mode = modesRepository.findByModeName(name).orElseGet(() -> {
+				Mode newMode = new Mode();
+				newMode.setModeName(name);
+				return modesRepository.save(newMode);
+			});
+			allModes.put(name, mode);
 		}
 
 		// Converting Map values into Set

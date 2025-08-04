@@ -43,7 +43,9 @@ public class JobApplications
     @PrePersist
     public void onApply() {
         this.appliedAt = LocalDateTime.now();
-    }//	*************************************  Getter, Setter & Constructors  *************************************
+    }
+    
+    //	*************************************  Getter, Setter & Constructors  *************************************
 
 	public long getApplicationId() {
 		return applicationId;
