@@ -1,5 +1,6 @@
 package com.newrise.applicanttrackingsystem.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -12,6 +13,7 @@ import com.newrise.applicanttrackingsystem.entities.Users;
 
 public interface JobsRepository extends JpaRepository<Jobs, Long>
 {
+	List<Jobs> findByCreatedBy(Users createdBy);
 	Page<Jobs> findByCreatedBy(Users createdBy, Pageable pageable);
 	Optional<Jobs> findByCreatedByAndJobId(Users createdBy, long id);
 }

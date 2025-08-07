@@ -1,5 +1,6 @@
 package com.newrise.applicanttrackingsystem.servicesimpl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,5 +82,10 @@ public class JobServiceImpl implements IJobService
 			return true;
 		} 
 		return false;
+	}
+
+	@Override
+	public List<Jobs> getAllJobsToHR(Users createdBy) {
+		return jobsRepository.findByCreatedBy(createdBy);
 	}
 }

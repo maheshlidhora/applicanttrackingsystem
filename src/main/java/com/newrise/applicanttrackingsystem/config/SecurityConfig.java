@@ -72,6 +72,7 @@ public class SecurityConfig
 	    new AntPathRequestMatcher("/user/getJobDetails/{jobId}"),
 	    new AntPathRequestMatcher("/user/doUpdateInJob/{jobId}"),
 	    new AntPathRequestMatcher("/user/deleteJob/{id}"),
+	    new AntPathRequestMatcher("/interview/scheduleInterview"),
 	    
 //	    ------------------------- To Candidate -------------------------
 //	    new AntPathRequestMatcher("/user/candidate/getallJobs/?{page}&{size}"),

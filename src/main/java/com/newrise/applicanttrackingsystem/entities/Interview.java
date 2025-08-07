@@ -1,8 +1,11 @@
 package com.newrise.applicanttrackingsystem.entities;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -35,14 +38,18 @@ public class Interview
 	@JoinColumn(name = "interviewer_id", nullable = false)
 	private Users interviewer;
 
-	@Column(nullable = false)
-	private LocalDateTime scheduledAt;
+	@Column(name = "scheduledDate", nullable = false)
+	private LocalDate scheduledDate;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+	@Column(name = "scheduledTime", nullable = false)
+	private LocalTime scheduledTime;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "mode_id", nullable = false)
 	private Mode mode; // Online, Offline, On-site, WFH≠
 
-	@Column(name = "remarks", length = 1000)
+	@Column(name = "remarks", length = 1500)
 	private String remarks;
 
 	@Column(nullable = false, updatable = false)
@@ -86,12 +93,20 @@ public class Interview
 		this.interviewer = interviewer;
 	}
 
-	public LocalDateTime getScheduledAt() {
-		return scheduledAt;
+	public LocalDate getScheduledDate() {
+		return scheduledDate;
 	}
 
-	public void setScheduledAt(LocalDateTime scheduledAt) {
-		this.scheduledAt = scheduledAt;
+	public void setScheduledDate(LocalDate scheduledDate) {
+		this.scheduledDate = scheduledDate;
+	}
+
+	public LocalTime getScheduledTime() {
+		return scheduledTime;
+	}
+
+	public void setScheduledTime(LocalTime scheduledTime) {
+		this.scheduledTime = scheduledTime;
 	}
 
 	public Mode getMode() {
@@ -134,13 +149,15 @@ public class Interview
 		this.feedbackList = feedbackList;
 	}
 
-	public Interview(Long interviewId, JobApplications jobApplication, Users interviewer, LocalDateTime scheduledAt,
-			Mode mode, String remarks, LocalDateTime createdAt, LocalDateTime updatedAt, Set<Feedback> feedbackList) {
+	public Interview(Long interviewId, JobApplications jobApplication, Users interviewer, LocalDate scheduledDate,
+			LocalTime scheduledTime, Mode mode, String remarks, LocalDateTime createdAt, LocalDateTime updatedAt,
+			Set<Feedback> feedbackList) {
 		super();
 		this.interviewId = interviewId;
 		this.jobApplication = jobApplication;
 		this.interviewer = interviewer;
-		this.scheduledAt = scheduledAt;
+		this.scheduledDate = scheduledDate;
+		this.scheduledTime = scheduledTime;
 		this.mode = mode;
 		this.remarks = remarks;
 		this.createdAt = createdAt;

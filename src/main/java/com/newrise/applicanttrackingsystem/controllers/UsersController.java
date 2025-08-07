@@ -155,11 +155,11 @@ public class UsersController
             return ResponseEntity.badRequest().body(response);
         }
 
-        // Allowing Registration only for "HR Manager" and "Candidate".
+        // Allowing Registration only for "HR Manager", "Interviewer" and "Candidate".
         Set<Roles> filteredRoles = users.getRoles().stream()
                 .filter(role -> {
                     String roleName = role.getRoleName();
-                    return roleName.equalsIgnoreCase("HR Manager") || roleName.equalsIgnoreCase("Candidate");
+                    return roleName.equalsIgnoreCase("HR Manager") || roleName.equalsIgnoreCase("Candidate") || roleName.equalsIgnoreCase("Interviewer");
 //                    return roleName.equalsIgnoreCase("Candidate");
                 })
                 .collect(Collectors.toSet());
