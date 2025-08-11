@@ -1,6 +1,5 @@
 package com.newrise.applicanttrackingsystem.servicesimpl;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import com.newrise.applicanttrackingsystem.entities.Jobs;
 import com.newrise.applicanttrackingsystem.entities.Users;
 import com.newrise.applicanttrackingsystem.repository.ApplicationStatusRepository;
 import com.newrise.applicanttrackingsystem.repository.ApplicationsRepository;
-import com.newrise.applicanttrackingsystem.repository.JobsRepository;
 import com.newrise.applicanttrackingsystem.services.IApplicationService;
 
 @Service
