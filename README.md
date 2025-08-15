@@ -10,10 +10,10 @@ It offers **secure authentication**, **role-based access control**, **job postin
 ---
 
 ## 📑 Table of Contents
-1. [Features](#-features)
-2. [Architecture](#-architecture)
-3. [Modules](#-modules)
-4. [Installation & Setup](#-installation--setup)
+1. [Features](#features)
+2. [Architecture](#architecture)
+3. [Modules](#modules)
+4. [Installation & Setup](#installation-setup)
 
 
 ---
@@ -76,8 +76,6 @@ It offers **secure authentication**, **role-based access control**, **job postin
 
 ### 6. Feedback
 - **Feedback** entity for ratings and comments
-
----
 
 ---
 
