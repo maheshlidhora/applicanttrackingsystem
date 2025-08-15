@@ -13,12 +13,8 @@ It offers **secure authentication**, **role-based access control**, **job postin
 1. [Features](#-features)
 2. [Architecture](#-architecture)
 3. [Modules](#-modules)
-4. [Project Structure](#-project-structure)
-5. [Installation & Setup](#-installation--setup)
-6. [API Endpoints](#-api-endpoints)
-7. [Workflow](#-workflow)
-8. [Known Issues](#-known-issues)
-9. [License](#-license)
+4. [Installation & Setup](#-installation--setup)
+
 
 ---
 
