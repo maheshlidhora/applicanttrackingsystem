@@ -18,13 +18,13 @@ public interface IFeedbackServices
 //	Update Feedback
 	public Feedback updateFeedback(Feedback feedback);
 	
-//	View Feedbacks by Interview ID
-	public List<Feedback> getFeedbacksOnAnInterview(Interview interview);
-	
 //	Delete Feedback
 	public boolean deleteFeedback(Feedback feedback);
 	
 //	List All Feedback
+//	View Feedbacks by Interview ID
+	public List<Feedback> getFeedbacksOnAnInterview(Interview interview);
+	
 //	--> Based on An Application
 	public List<Feedback> getAllFeedbacksOnAnApplication(JobApplications applications);
 	

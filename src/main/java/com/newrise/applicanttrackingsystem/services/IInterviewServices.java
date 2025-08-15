@@ -9,7 +9,7 @@ import com.newrise.applicanttrackingsystem.entities.Users;
 public interface IInterviewServices 
 {
 	public boolean createInterview(Interview interview); // 	--> 	scheduleInterview
-	public Interview fetchinterview(long interviewId);
+	public Interview fetchinterview(Long interviewId);
 	public boolean isTimeSlotTaken(Users interviewer, LocalDate scheduledDate, LocalTime scheduledTime);
 	public String updateInterviewStatus(long applicationId, String applicationStatus);
 	

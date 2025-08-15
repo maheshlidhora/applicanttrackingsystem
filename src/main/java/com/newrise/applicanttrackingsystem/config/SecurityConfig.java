@@ -88,6 +88,12 @@ public class SecurityConfig
 	    new AntPathRequestMatcher("/user/candidate/findAppliedApplications/**"),
 	    new AntPathRequestMatcher("/user/candidate/withdrawApplication/{applicationId}"),
 	    
+//	    ------------------------- To Feedback -------------------------
+	    new AntPathRequestMatcher("/interview/feedback/addFeedback"),
+	    new AntPathRequestMatcher("/interview/feedback/getFeedback/{feedbackId}"),
+	    new AntPathRequestMatcher("/interview/feedback/updateFeedback/{feedbackId}"),
+	    new AntPathRequestMatcher("/interview/feedback/deleteFeedback/{feedbackId}"),
+	    
 //	    new AntPathRequestMatcher("/user/**")				//For All "/user/________"
 	};
 

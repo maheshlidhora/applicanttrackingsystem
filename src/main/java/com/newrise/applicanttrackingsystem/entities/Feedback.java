@@ -11,6 +11,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 @Entity
 @Table(name = "Feedback")
@@ -27,8 +29,10 @@ public class Feedback
 	@Column(length = 500)
 	private String comments;
 	
+	@Min(1)
+	@Max(5)
 	@Column(nullable=false)
-	private int rating; //	1–10 scale
+	private int rating; //	1–5 scale
 
 	@Column(nullable = false, updatable = false)
 	private LocalDateTime submittedAt = LocalDateTime.now();

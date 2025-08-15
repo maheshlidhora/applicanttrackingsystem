@@ -64,7 +64,7 @@ public class InterviewServiceImpl implements IInterviewServices {
 	}
 
 	@Override
-	public Interview fetchinterview(long interviewId) {
+	public Interview fetchinterview(Long interviewId) {
 		try {
 			return interviewsRepository.findById(interviewId).get();
 		} catch (Exception e) {
