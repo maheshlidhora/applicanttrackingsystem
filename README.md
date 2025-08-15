@@ -9,26 +9,6 @@ It offers **secure authentication**, **role-based access control**, **job postin
 
 ---
 
-## 📂 Project Structure
-
-applicanttrackingsystem/
-├── src/main/java/com/newrise/applicanttrackingsystem
-│ ├── config/ # Security & Data Initializer
-│ ├── controllers/ # REST API controllers
-│ ├── entities/ # JPA entities
-│ ├── repositories/ # Spring Data JPA repositories
-│ ├── servicesimpl/ # Service layer implementations
-│ ├── security/ # JWT & authentication classes
-│ └── ApplicantTrackingSystemApplication.java
-├── src/main/resources/
-│ ├── application.properties
-│ └── static/ & templates/ (if any)
-├── uploads/resumes/ # Uploaded resumes
-├── pom.xml # Maven dependencies
-├── Applicant Tracking System (ATS).pdf # Documentation
-├── Project Work Flow.pdf # Workflow diagram
-└── README.md
-
 ## 📑 Table of Contents
 1. [Features](#-features)
 2. [Architecture](#-architecture)
@@ -119,13 +99,5 @@ applicanttrackingsystem/
 git clone https://github.com/maheshlidhora/applicanttrackingsystem.git
 cd applicanttrackingsystem
 
-
-
-
----
-
-This now contains **everything** — your full installation & setup instructions, complete API documentation, workflow, and known issues — in a clean, professional GitHub format.  
-
-If you want, I can also **embed diagrams** from your *Project Work Flow.pdf* and *ATS.pdf* into this README so it’s more visually appealing on GitHub. That would make it stand out to recruiters.
 
 
