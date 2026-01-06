@@ -21,9 +21,20 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "Users")
+@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+
 public class Users 
 {
 	@Id
@@ -95,175 +106,4 @@ public class Users
 	@JsonIgnore
 	private Set<Interview> interviewsAsInterviewer;
 
-	
-	//	*************************************  Getter, Setter & Constructors  *************************************
-
-	public long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public Set<Roles> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(Set<Roles> roles) {
-		this.roles = roles;
-	}
-
-	public String getUserType() {
-		return userType;
-	}
-
-	public void setUserType(String userType) {
-		this.userType = userType;
-	}
-
-	public String getMobileNo() {
-		return mobileNo;
-	}
-
-	public void setMobileNo(String mobileNo) {
-		this.mobileNo = mobileNo;
-	}
-
-	public String getOtpCode() {
-		return otpCode;
-	}
-
-	public void setOtpCode(String otpCode) {
-		this.otpCode = otpCode;
-	}
-
-	public LocalDateTime getOtpExpiry() {
-		return otpExpiry;
-	}
-
-	public void setOtpExpiry(LocalDateTime otpExpiry) {
-		this.otpExpiry = otpExpiry;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public boolean isVerified() {
-		return isVerified;
-	}
-
-	public void setVerified(boolean isVerified) {
-		this.isVerified = isVerified;
-	}
-
-	public boolean isBlocked() {
-		return isBlocked;
-	}
-
-	public void setBlocked(boolean isBlocked) {
-		this.isBlocked = isBlocked;
-	}
-
-	public Set<Jobs> getCreatedJobs() {
-		return createdJobs;
-	}
-
-	public void setCreatedJobs(Set<Jobs> createdJobs) {
-		this.createdJobs = createdJobs;
-	}
-
-	public Set<JobApplications> getJobApplications() {
-		return jobApplications;
-	}
-
-	public void setJobApplications(Set<JobApplications> jobApplications) {
-		this.jobApplications = jobApplications;
-	}
-
-	public Set<Token> getTokens() {
-		return tokens;
-	}
-
-	public void setTokens(Set<Token> tokens) {
-		this.tokens = tokens;
-	}
-
-	public Set<Interview> getInterviewsAsInterviewer() {
-		return interviewsAsInterviewer;
-	}
-
-	public void setInterviewsAsInterviewer(Set<Interview> interviewsAsInterviewer) {
-		this.interviewsAsInterviewer = interviewsAsInterviewer;
-	}
-	
-	public Users(long userId, String firstName, String lastName,
-			@Email(message = "Email should be valid") @NotBlank(message = "Email is required") String email,
-			@NotBlank(message = "Password is required") @Size(min = 6, message = "Password should be at least 6 characters to maximum 15 characters") String password,
-			Set<Roles> roles, String userType,
-			@Size(min = 10, max = 10, message = "Contact number must be 10 digits") @Pattern(regexp = "^[0-9]{10}$", message = "Contact number must contain only digits") String mobileNo,
-			String otpCode, LocalDateTime otpExpiry, LocalDateTime createdAt, boolean isVerified, boolean isBlocked,
-			Set<Jobs> createdJobs, Set<JobApplications> jobApplications, Set<Token> tokens,
-			Set<Interview> interviewsAsInterviewer) {
-		super();
-		this.userId = userId;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.password = password;
-		this.roles = roles;
-		this.userType = userType;
-		this.mobileNo = mobileNo;
-		this.otpCode = otpCode;
-		this.otpExpiry = otpExpiry;
-		this.createdAt = createdAt;
-		this.isVerified = isVerified;
-		this.isBlocked = isBlocked;
-		this.createdJobs = createdJobs;
-		this.jobApplications = jobApplications;
-		this.tokens = tokens;
-		this.interviewsAsInterviewer = interviewsAsInterviewer;
-	}
-
-	public Users() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
 }
