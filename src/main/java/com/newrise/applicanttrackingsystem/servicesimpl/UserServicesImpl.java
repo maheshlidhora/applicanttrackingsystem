@@ -63,7 +63,7 @@ public class UserServicesImpl implements IUserServices
 			{
 				return "This contact is already registered. Please choose another contact.";
 			}
-			return "User Registered Successfully!!";
+			return "User Registered Successfully!";
 		} 
 		else 
 		{
